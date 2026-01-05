@@ -1,4 +1,5 @@
-// Shared types for both web and mobile
+import { GeoItemService } from './index';
+import { GeoLocation } from "../core/GeoLocation";
 
 export interface GeoItem {
   country: Country;
@@ -15,4 +16,25 @@ export interface Flag {
 export interface Country {
   id: number;
   name: string;
+}
+
+export interface Question {
+  id: number;
+  geoItem: GeoItem;
+  sessionAttempts: SessionAttempts
+}
+
+export interface SessionAttempts {
+  sessionId: number;
+  attempts: number;
+}
+
+export interface TriviaProps {
+  location: GeoLocation
+  geoItemService: GeoItemService
+}
+
+export interface GeoItemService {
+  getLatinAmericaFlags(): Array<GeoItem>
+  getBrazilFlags(): Array<GeoItem>
 }

@@ -1,47 +1,54 @@
 'use client'
 
-import { useCallback, useState, useEffect } from "react"
-import { Flag, GeoItem } from "../types"
-import { getFlags } from "../services/geoItemService"
-import { randomize } from "../utils";
+import { useState, useEffect } from "react"
+import { Country, Flag, GeoItem, TriviaProps } from "../types"
+import { shuffleArray } from "../utils";
+import { GeoLocation } from "../core/GeoLocation";
+import { GeoItemDataSource } from "../services/geoItemDataSource";
+import { Trivia } from "../core/Trivia";
 
 // Isso é basicamente uma classe... aff, pra que complicar?
 
 export const GameManager = () => {
 
+    const triviaProps: TriviaProps = {
+        location: GeoLocation.LATIN_AMERICA,
+        geoItemService: new GeoItemDataSource()
+    }
+
     const [score, setScore] = useState<number>(0)
     const [retry, setRetry] = useState<number>(0)
     const [game, setGame] = useState<boolean>(true)
 
-    const [questions, setQuestions] = useState<Array<GeoItem>>()
-    const [answers, setAnswers] = useState<Array<GeoItem>>()
-    const [currentQuestion, setCurrentQuestion] = useState<GeoItem>()
+    const [countries, setCountries] = useState<Array<Country>>()
+    const [flags, setFlags] = useState<Array<Flag>>()
+    const [currentCountry, setCurrentCountry] = useState<Country>()
 
 
     const initializeGame = () => {
-        const geoItems : Array<GeoItem> = getFlags()
-        const shuffledQuestions = randomize(geoItems)
-        const shuffledAnswers = randomize(geoItems)
-        return {shuffledQuestions, shuffledAnswers}
+        const trivia: Trivia = new Trivia(triviaProps)
+        const newCountries = trivia.getCountries()
+        const newFlags = trivia.getFlags()
+        return {newCountries, newFlags}
     }
 
 
     const nextQuestion = () => {
-        const updatedQuestions = [...questions]
-        const currentQuestion = updatedQuestions.pop()
-        setCurrentQuestion(currentQuestion);
-        setQuestions(updatedQuestions)
-        if (!currentQuestion || currentQuestion == undefined) {
+        const updatedCountries = [...countries]
+        const currentCountry = updatedCountries.pop()
+        setCurrentCountry(currentCountry);
+        setCountries(updatedCountries)
+        if (!currentCountry || currentCountry == undefined) {
             setGame(false)
         } 
     }
 
     const resetGame = () => {
-        const { shuffledQuestions, shuffledAnswers } = initializeGame();
-        setAnswers(shuffledAnswers)        
-        const currentQuestion = shuffledQuestions.pop()
-        setCurrentQuestion(currentQuestion);
-        setQuestions(shuffledQuestions)
+        const {newCountries, newFlags} = initializeGame();
+        setFlags(newFlags)        
+        const currentQuestion = newCountries.pop()
+        setCurrentCountry(currentQuestion);
+        setCountries(newCountries)
         setScore(0)
         setRetry(0)
         setGame(true)
@@ -50,21 +57,21 @@ export const GameManager = () => {
 
     // Definir primeira pergunta no início do jogo
     useEffect(() => {
-        const { shuffledQuestions, shuffledAnswers } = initializeGame();
-        setAnswers(shuffledAnswers)        
-        const currentQuestion = shuffledQuestions.pop()
-        setCurrentQuestion(currentQuestion);
-        setQuestions(shuffledQuestions)
+        const {newCountries, newFlags} = initializeGame();
+        setFlags(newFlags)        
+        const currentQuestion = newCountries.pop()
+        setCurrentCountry(currentQuestion);
+        setCountries(newCountries)
     }, []);
 
     
     const checkAnswer = (index: number) => {
-        const selectedAnswer = answers[index]
-        if (selectedAnswer.flag.country_id === currentQuestion?.country.id) {
+        const selectedAnswer = flags[index]
+        if (selectedAnswer.country_id === currentCountry?.id) {
 
-            const updatedAnswers = [...answers]
+            const updatedAnswers = [...flags]
             updatedAnswers.splice(index, 1)
-            setAnswers(updatedAnswers)
+            setFlags(updatedAnswers)
 
             const updatedScore = score + 1
             setScore(updatedScore)
@@ -74,6 +81,6 @@ export const GameManager = () => {
     }
 
 
-    return { score, retry, currentQuestion, answers, game, checkAnswer, resetGame };
+    return { score, retry, currentQuestion: currentCountry, answers: flags, game, checkAnswer, resetGame };
 
 }
