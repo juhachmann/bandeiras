@@ -1,14 +1,33 @@
+'use client'
 
-'use client';
+import { GameManager } from "@/src/hooks/useGameManager";
+import GameLayout from '@/src/components/GameLayout';
+import FlagCards from "@/src/components/FlagCards";
 
-import { Button } from '../src/web/components/Button';
+export default function Home() {  
 
-export default function Home() {
+    const { answers, game, checkAnswer, currentQuestion, resetGame, score } = GameManager();
 
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl mb-4">Flags App</h1>
-      <a href="/game" className='btn btn-primary'>Get Started</a>
-    </div>
-  );
-}
+    return (  
+        <GameLayout 
+            title={"Trivia Game"} 
+            score={score} 
+            onReset={resetGame} 
+            game={game}
+            question={`País: ${currentQuestion?.country.name}`}
+        > 
+            { answers && answers.map((answer, index) => (
+                <FlagCards
+                    key={index}
+                    flag={answer.flag}
+                    index={index}
+                    disabled={false}
+                    hit={false}
+                    miss={false}
+                    checkAnswer={checkAnswer}
+                />
+            ) ) }
+        </GameLayout>
+    );
+
+};

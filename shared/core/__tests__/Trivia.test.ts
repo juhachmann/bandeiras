@@ -7,7 +7,7 @@ describe('Trivia', () => {
 
   const triviaProps: TriviaProps = { 
     location: GeoLocation.LATIN_AMERICA,
-    geoItemService: new GeoItemDataSource() 
+    geoItemRepository: new GeoItemDataSource() 
   };
 
   describe('constructor', () => {
@@ -74,7 +74,7 @@ describe('Trivia', () => {
         flag: { country_id: 1, file: 'brazil.svg', description: '', info: '' }
       };
       
-      expect(trivia.doesMatch(brazil.country, brazil.flag)).toBe(true);
+      expect(trivia.isCorrect(brazil.country, brazil.flag)).toBe(true);
     });
 
     it('should return false when question and answer have different country ids', () => {
@@ -89,7 +89,7 @@ describe('Trivia', () => {
         flag: { country_id: 2, file: 'argentina.svg', description: '', info: '' }
       };
       
-      expect(trivia.doesMatch(brazil.country, argentina.flag)).toBe(false);
+      expect(trivia.isCorrect(brazil.country, argentina.flag)).toBe(false);
     });
   });
 

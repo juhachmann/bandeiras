@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { BandManager } from '../core/BandManager';
-import { Band } from '../types';
+import { BandManager } from '@shared/core/BandManager';
+import { Band } from '@shared/types';
 
 const bandManager = new BandManager();
 

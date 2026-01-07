@@ -1,11 +1,9 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { Country, Flag, GeoItem, TriviaProps } from "../types"
-import { shuffleArray } from "../utils";
-import { GeoLocation } from "../core/GeoLocation";
-import { GeoItemDataSource } from "../services/geoItemDataSource";
-import { Trivia } from "../core/Trivia";
+import { Country, Flag, TriviaProps } from "@shared/types"
+import { GeoLocation } from "@shared/core/GeoLocation";
+import { Trivia } from "@shared/core/Trivia";
 
 // Isso é basicamente uma classe... aff, pra que complicar?
 
@@ -13,7 +11,6 @@ export const GameManager = () => {
 
     const triviaProps: TriviaProps = {
         location: GeoLocation.LATIN_AMERICA,
-        geoItemService: new GeoItemDataSource()
     }
 
     const [score, setScore] = useState<number>(0)

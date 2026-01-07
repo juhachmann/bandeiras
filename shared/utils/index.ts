@@ -1,6 +1,6 @@
 // Business logic - platform agnostic
 
-export const shuffleArray = (data: Array<any>) : Array<any> => {
+export const shuffleArray = (data: any[]) : any[] => {
   return data
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
