@@ -1,11 +1,11 @@
 import { GameConfig } from '@/types/gameConfig'
-import { Question } from '@/types/questions';
+import { Question } from '@/types/question';
 
 export interface GameSession {
-  id: string;
+  session_id?: string;
   userId?: string;
   config: GameConfig;
-  startTime: Date;
+  startTime?: Date;
   endTime?: Date;
   score: number;
   totalQuestions: number;

@@ -1,44 +1,63 @@
-import { GameSessionRepository, GeoItemRepository } from "@/repository/repositories";
+import { GameSessionRepository, GeoItemRepository } from "@/types/repository";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
-import { GameProgress, GameSession } from "@/types/gameSession";
-import { Question } from '@/types/questions';
-import { ScoreCalculator } from "@/core/ScoreCalculator";
-import { GameTimer } from "./GameTimer";
+import { GameSession } from "@/types/gameSession";
+import { GameTimer } from "../types/GameTimer";
+import { GeoItem, Question } from "../types";
+import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactoy";
 
 export class GameEngine {
 
-  // private scoreCalculator : ScoreCalculator
-  // private 
+  private constructor(
+    private geoitemRepository: GeoItemRepository,
+    private sessionRepository: GameSessionRepository,
+    private timer: GameTimer,
+    private session: GameSession,
+    private questionFactory : QuestionFactory
+  ) { }
 
-  constructor(
+  static fromConfig(
     repository: GeoItemRepository,
     sessionRepository: GameSessionRepository,
     timer: GameTimer,
-    config: GameConfig,
-  ) 
+    config: GameConfig
+  ) : GameEngine {
+    const session : GameSession = {
+      config: config,
+      score: 0,
+      totalQuestions: 0,
+      questions: [],
+      gameTimeMiliseconds: 0
+    }
+    const questionFactory : QuestionFactory = QuestionFactory.create(session.config)
+    return new GameEngine(repository, sessionRepository, timer, session, questionFactory)
+  }
 
-  constructor(
+  static fromSession(
     repository: GeoItemRepository,
     sessionRepository: GameSessionRepository,
     timer: GameTimer,
     session: GameSession
-  ) 
-
-  constructor(
-    private repository: GeoItemRepository,
-    private sessionRepository: GameSessionRepository,
-    private timer: GameTimer,
-    configOrSession: GameConfig | GameSession,
-  ) {
-    this.initialize()
-  }
-  
-  // Lifecycle
-  private async initialize(): Promise<void> {
-    // Cria a sessão, o progress, as questions, o timer e o score, inicializa o score calculator e o questionFactory
+  ) : GameEngine {
+    const questionFactory : QuestionFactory = QuestionFactory.create(session.config)
+    return new GameEngine(repository, sessionRepository, timer, session, questionFactory) 
   }
 
-  async startGame(): Promise<void> {
+  async initialize(): Promise<void> {
+      if (this.session.questions.length == 0) {
+          await this.setSessionQuestions()
+      }
+  }  
+
+  private async setSessionQuestions(): Promise<void> {
+    const geoItems = await this.geoitemRepository.getByGeoLocation(this.session.config.location)
+    const questions = this.questionFactory.createQuestions(geoItems)
+    this.session.questions = questions
+    this.session.totalQuestions = questions.length
+  }
+
+
+
+  startGame(): void {
 
   }
 
@@ -54,8 +73,8 @@ export class GameEngine {
     return false 
   }
 
-  getSession(): GameSession | null { 
-    return null
+  getSession(): GameSession { 
+    return this.session
   }
 
 }

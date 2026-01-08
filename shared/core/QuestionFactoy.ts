@@ -1,6 +1,6 @@
 import { GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
-import { GeoItem } from "@/types/geoItems";
-import { Question } from "@/types/questions";
+import { GeoItem } from "@/types/geoItem";
+import { Question } from "@/types/question";
 
 export abstract class QuestionFactory {
 
@@ -9,24 +9,50 @@ export abstract class QuestionFactory {
 
     abstract validateAnswer(question: Question[], selectedId: string) : boolean
 
-    static create (gameConfig: GameConfig) : QuestionFactory | null {
+    static create (gameConfig: GameConfig) : QuestionFactory {
         switch (gameConfig.gameType) {
             case GameType.FLAGS:
                 return new FlagQuestionFactory();
             case GameType.COUNTRIES:
                 return new CountryQuestionFactory();
-            default:
-                return null
+            default: // TODO: pode ter um FactoryPadrão ou Factory Nulo...
+                return new FlagQuestionFactory();
         }
+    }
+
+    protected shuffleList(array: any[]) : any[] {
+        return array
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)
     }
 
 }
 
 
-class FlagQuestionFactory extends QuestionFactory {
+export class FlagQuestionFactory extends QuestionFactory {
 
     createQuestions(geoItems: GeoItem[]): Question[] {
-        throw new Error("Method not implemented.");
+        const questions : Question[] = geoItems.map(geoItem => {
+            const question : Question = {
+                geoItemId: String(geoItem.flag.country_id),
+                text: geoItem.flag.description,
+                image: geoItem.flag.file,
+                hint: geoItem.flag.description,
+                answer: {
+                    geoItemId: String(geoItem.flag.country_id),
+                    text: geoItem.country.name,
+                    info: geoItem.flag.info,
+                },
+                status: {
+                    attempts: 0,
+                    hit: false
+                }
+            }
+            return question
+        })
+        return this.shuffleList(questions)
+
     }
 
     validateAnswer(question: Question[], selectedId: string): boolean {
@@ -35,7 +61,7 @@ class FlagQuestionFactory extends QuestionFactory {
 
 }
 
-class CountryQuestionFactory extends QuestionFactory {
+export class CountryQuestionFactory extends QuestionFactory {
 
     createQuestions(geoItems: GeoItem[]): Question[] {
         throw new Error("Method not implemented.");

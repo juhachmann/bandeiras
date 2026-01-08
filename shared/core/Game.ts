@@ -1,8 +1,8 @@
-import { Question } from "@/types/questions";
-import { GameProgress, GameSession } from "@/types/gameSession";
+import { GameSession } from "@/types/gameSession";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
-import { GameAdapter } from "@/GameAdapter";
-import { GameEngine } from "./core/GameEngine";
+import { GameAdapter } from "@/core/GameAdapter";
+import { GameEngine } from "./GameEngine";
+import { Question } from "@/types";
 
 export class Game {
 
@@ -15,11 +15,13 @@ export class Game {
         const itemRepo = this.adpater.getGeoItemRepository()
         const sessionRepo = this.adpater.getSessionRepository()
         const timer = this.adpater.getTimer()
-        this.gameEngine = new GameEngine(itemRepo, sessionRepo, timer, this.gameConfig)
+        this.gameEngine = GameEngine.fromConfig(itemRepo, sessionRepo, timer, gameConfig)
     }
 
     static async createGame(gameConfig: GameConfig, gameAdapter: GameAdapter): Promise<Game> {
-        return new Game(gameConfig, gameAdapter);
+        const game = new Game(gameConfig, gameAdapter);
+        await game.gameEngine.initialize();  // Esperar inicialização
+        return game;
     }
 
     static async loadGame(sessionId: string, gameAdapter: GameAdapter): Promise<Game | undefined> {
@@ -32,12 +34,16 @@ export class Game {
         return new Game(gameConfig, gameAdapter);
     }
 
-    async saveGame(): Promise<void> {
+    start() : void {
+
+    }
+
+    async save(): Promise<void> {
         // Salva GameSession e GameProgress ... 
         // ... se GameProgress estiver como não iniciado ou terminado, não precisa salvar as questões
     }
 
-    async endGame(): Promise<void> {
+    async end(): Promise<void> {
     
     }
 
@@ -57,8 +63,18 @@ export class Game {
         return this.gameEngine.isGameOver()
     }
 
-    getSession(): GameSession { 
-        return this.gameEngine.getSession()
+    getQuestions(): Question[] {
+        const session = this.gameEngine.getSession()        
+        return this.gameEngine.getSession().questions
     }
+
+    getQuestionOrder(): number[] {
+        return []
+    }
+
+    getCurrentQuestion(): Question | null {
+        return null
+    }
+
 
 }
