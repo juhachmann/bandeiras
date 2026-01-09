@@ -2,25 +2,25 @@ import { GameSession } from "@/types/gameSession";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
 import { GameAdapter } from "@/core/GameAdapter";
 import { GameEngine } from "./GameEngine";
-import { Question } from "@/types";
+import { Answer, Question } from "./Question";
 
 export class Game {
 
     private gameEngine : GameEngine
 
     private constructor (
-        private gameConfig: GameConfig, 
-        private adpater: GameAdapter
+        gameConfig: GameConfig, 
+        adpater: GameAdapter
     ) { 
-        const itemRepo = this.adpater.getGeoItemRepository()
-        const sessionRepo = this.adpater.getSessionRepository()
-        const timer = this.adpater.getTimer()
+        const itemRepo = adpater.getGeoItemRepository()
+        const sessionRepo = adpater.getSessionRepository()
+        const timer = adpater.getTimer()
         this.gameEngine = GameEngine.fromConfig(itemRepo, sessionRepo, timer, gameConfig)
     }
 
     static async createGame(gameConfig: GameConfig, gameAdapter: GameAdapter): Promise<Game> {
         const game = new Game(gameConfig, gameAdapter);
-        await game.gameEngine.initialize();  // Esperar inicialização
+        await game.gameEngine.initialize();
         return game;
     }
 
@@ -31,6 +31,7 @@ export class Game {
             location: GeoLocation.BRAZIL,
             difficulty: Difficulty.EASY
         }
+        // Aqui vai fazer o Game Engine from Session!!
         return new Game(gameConfig, gameAdapter);
     }
 
@@ -55,8 +56,8 @@ export class Game {
 
     }
 
-    submitAnswer(selectedId: string): boolean { 
-        return this.gameEngine.submitAnswer(selectedId)
+    validateAnswer(question: Question, answer: Answer): boolean { 
+        return this.gameEngine.submitAnswer(question, answer)
     }
     
     isGameOver(): boolean { 

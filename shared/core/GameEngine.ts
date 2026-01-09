@@ -2,13 +2,13 @@ import { GameSessionRepository, GeoItemRepository } from "@/types/repository";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
 import { GameSession } from "@/types/gameSession";
 import { GameTimer } from "../types/GameTimer";
-import { GeoItem, Question } from "../types";
 import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactoy";
+import { Answer, Question } from "./Question";
 
 export class GameEngine {
 
   nextQuestion(): Question | null {
-      return this.questionFactory.findNextQuestion()
+      return this.questionFactory.findNextQuestion(this.session.questions)
   }
 
   private constructor(
@@ -59,8 +59,6 @@ export class GameEngine {
     this.session.totalQuestions = questions.length
   }
 
-
-
   startGame(): void {
 
   }
@@ -69,8 +67,8 @@ export class GameEngine {
     return null 
   }
   
-  submitAnswer(selectedId: string): boolean { 
-    return false 
+  submitAnswer(question: Question, answer: Answer): boolean {
+    return this.questionFactory.validateAnswer(question, answer) 
   }
   
   isGameOver(): boolean { 

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1767962030724" clover="3.2.0">
+  <project timestamp="1767962030724" name="All files">
+    <metrics statements="124" coveredstatements="86" conditionals="13" coveredconditionals="9" methods="62" coveredmethods="28" elements="199" coveredelements="123" complexity="0" loc="124" ncloc="124" packages="4" files="11" classes="11"/>
+    <package name="__dev__">
+      <metrics statements="42" coveredstatements="28" conditionals="2" coveredconditionals="1" methods="22" coveredmethods="10"/>
+      <file name="EmptyGameAdapter.ts" path="/home/julianahachmann/ju/band/shared/__dev__/EmptyGameAdapter.ts">
+        <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+      </file>
+      <file name="EmptyRepositoryMock.ts" path="/home/julianahachmann/ju/band/shared/__dev__/EmptyRepositoryMock.ts">
+        <metrics statements="5" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+      </file>
+      <file name="GameAdapterMock.ts" path="/home/julianahachmann/ju/band/shared/__dev__/GameAdapterMock.ts">
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="15" count="24" type="stmt"/>
+        <line num="18" count="24" type="stmt"/>
+        <line num="21" count="24" type="stmt"/>
+      </file>
+      <file name="GameSessionRepositoryMock.ts" path="/home/julianahachmann/ju/band/shared/__dev__/GameSessionRepositoryMock.ts">
+        <metrics statements="4" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+      </file>
+      <file name="GameTimerMock.ts" path="/home/julianahachmann/ju/band/shared/__dev__/GameTimerMock.ts">
+        <metrics statements="7" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+      </file>
+      <file name="GeoItemRepositoryMock.ts" path="/home/julianahachmann/ju/band/shared/__dev__/GeoItemRepositoryMock.ts">
+        <metrics statements="8" coveredstatements="6" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="11" count="24" type="cond" truecount="0" falsecount="1"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="15" count="24" type="cond" truecount="1" falsecount="0"/>
+        <line num="16" count="24" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="__dev__.data">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <file name="geoItems.ts" path="/home/julianahachmann/ju/band/shared/__dev__/data/geoItems.ts">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="core">
+      <metrics statements="70" coveredstatements="46" conditionals="5" coveredconditionals="2" methods="37" coveredmethods="15"/>
+      <file name="Game.ts" path="/home/julianahachmann/ju/band/shared/core/Game.ts">
+        <metrics statements="20" coveredstatements="14" conditionals="0" coveredconditionals="0" methods="13" coveredmethods="3"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="12" count="25" type="stmt"/>
+        <line num="13" count="25" type="stmt"/>
+        <line num="15" count="25" type="stmt"/>
+        <line num="16" count="25" type="stmt"/>
+        <line num="17" count="25" type="stmt"/>
+        <line num="18" count="25" type="stmt"/>
+        <line num="22" count="25" type="stmt"/>
+        <line num="23" count="25" type="stmt"/>
+        <line num="24" count="25" type="stmt"/>
+        <line num="29" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="67" count="20" type="stmt"/>
+        <line num="68" count="20" type="stmt"/>
+        <line num="72" count="0" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+      </file>
+      <file name="GameEngine.ts" path="/home/julianahachmann/ju/band/shared/core/GameEngine.ts">
+        <metrics statements="23" coveredstatements="17" conditionals="1" coveredconditionals="1" methods="11" coveredmethods="5"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="15" count="25" type="stmt"/>
+        <line num="16" count="25" type="stmt"/>
+        <line num="17" count="25" type="stmt"/>
+        <line num="18" count="25" type="stmt"/>
+        <line num="19" count="25" type="stmt"/>
+        <line num="28" count="25" type="stmt"/>
+        <line num="35" count="25" type="stmt"/>
+        <line num="36" count="25" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="50" count="25" type="cond" truecount="1" falsecount="0"/>
+        <line num="51" count="25" type="stmt"/>
+        <line num="56" count="25" type="stmt"/>
+        <line num="57" count="25" type="stmt"/>
+        <line num="58" count="25" type="stmt"/>
+        <line num="59" count="25" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="73" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="81" count="40" type="stmt"/>
+      </file>
+      <file name="QuestionFactoy.ts" path="/home/julianahachmann/ju/band/shared/core/QuestionFactoy.ts">
+        <metrics statements="27" coveredstatements="15" conditionals="4" coveredconditionals="1" methods="13" coveredmethods="7"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="15" count="25" type="cond" truecount="1" falsecount="2"/>
+        <line num="17" count="25" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="26" count="25" type="stmt"/>
+        <line num="27" count="72" type="stmt"/>
+        <line num="28" count="72" type="stmt"/>
+        <line num="29" count="72" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="40" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="55" count="25" type="stmt"/>
+        <line num="56" count="72" type="stmt"/>
+        <line num="71" count="72" type="stmt"/>
+        <line num="74" count="25" type="stmt"/>
+        <line num="75" count="25" type="stmt"/>
+        <line num="80" count="0" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="92" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="types">
+      <metrics statements="10" coveredstatements="10" conditionals="6" coveredconditionals="6" methods="3" coveredmethods="3"/>
+      <file name="gameConfig.ts" path="/home/julianahachmann/ju/band/shared/types/gameConfig.ts">
+        <metrics statements="10" coveredstatements="10" conditionals="6" coveredconditionals="6" methods="3" coveredmethods="3"/>
+        <line num="2" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="7" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="12" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

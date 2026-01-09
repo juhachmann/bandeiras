@@ -1,4 +1,4 @@
-import { Question } from "@/types/question";
+import { Question } from "./Question"
 
 export class ScoreCalculator {
 
