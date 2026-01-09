@@ -27,11 +27,6 @@ describe('Game', () => {
         expect(game.getQuestions()).toBeInstanceOf(Array);
     })
 
-    it('should contain a Question Order List', () => {
-        expect(game.getQuestionOrder()).toBeInstanceOf(Array);
-    })        
-
-
 
 
     describe('QuestionList', () => {
@@ -84,22 +79,28 @@ describe('Game', () => {
             expect(results.size).toBeGreaterThan(expectedUnique)
         })
 
-
     })
 
+    describe('NextQuestion', () => {
 
-    describe('Question Order List', () => {
+        it('should not return Question whose property hit is true', () => {
 
-        it('when not empty, should be a list of numbers', () => {
-            expect(game.getQuestionOrder().every(item => item)).toBeInstanceOf(Number)        
         })
 
-        it('when not empty, should have the same lenght as Question List', () => {
-            expect(true).toBe(false);        
+        it('should return null if all Questions property hit is true', () => {
+            
+        })
+        
+        it('should not return null, when there is at least one Question whose property hit is false', () => {
+            
         })
 
-        it('when not empty, should only have numbers that correspond to Question List indexes', () => {
-            expect(true).toBe(false);        
+        it('should return random question, that is, it should be output with a minimum of different orders, given the number of questions', () => {
+                
+        })
+
+        it('teste de unidade', () => {
+            
         })
 
     })

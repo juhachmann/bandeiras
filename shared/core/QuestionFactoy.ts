@@ -4,6 +4,8 @@ import { Question } from "@/types/question";
 
 export abstract class QuestionFactory {
 
+    protected questions? : Question[]
+
     // Será que a lista de geoItems tem que vir de fora ou essa classe que tem que pegar?
     abstract createQuestions(geoItems : GeoItem[]) : Question[]
 
@@ -27,10 +29,27 @@ export abstract class QuestionFactory {
             .map(({ value }) => value)
     }
 
+    protected randomArrayIndex(arrayLength : number) {
+      return Math.floor(Math.random() * arrayLength)
+    }
+
+    findNextQuestion() : Question | null {
+        const candidates = this.questions!.filter((question) => !question.status.hit)
+        const length = candidates.length
+        
+        if (length == 0) {
+            return null
+        }
+        
+        const index = this.randomArrayIndex(length)
+        return candidates[index]
+    }
+
 }
 
 
 export class FlagQuestionFactory extends QuestionFactory {
+
 
     createQuestions(geoItems: GeoItem[]): Question[] {
         const questions : Question[] = geoItems.map(geoItem => {
@@ -51,7 +70,9 @@ export class FlagQuestionFactory extends QuestionFactory {
             }
             return question
         })
-        return this.shuffleList(questions)
+
+        this.questions = this.shuffleList(questions)
+        return this.questions
 
     }
 

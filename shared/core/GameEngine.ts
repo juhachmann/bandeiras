@@ -7,6 +7,10 @@ import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactoy";
 
 export class GameEngine {
 
+  nextQuestion(): Question | null {
+      return this.questionFactory.findNextQuestion()
+  }
+
   private constructor(
     private geoitemRepository: GeoItemRepository,
     private sessionRepository: GameSessionRepository,

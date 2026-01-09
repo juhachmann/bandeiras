@@ -68,8 +68,8 @@ export class Game {
         return this.gameEngine.getSession().questions
     }
 
-    getQuestionOrder(): number[] {
-        return []
+    nextQuestion() : Question | null {
+        return this.gameEngine.nextQuestion()
     }
 
     getCurrentQuestion(): Question | null {
