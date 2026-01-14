@@ -7,16 +7,14 @@ import { Answer, Question } from "./Question";
 
 export class GameEngine {
 
-  nextQuestion(): Question | null {
-      return this.questionFactory.findNextQuestion(this.session.questions)
-  }
+  private answers : Answer[] = []
 
   private constructor(
     private geoitemRepository: GeoItemRepository,
     private sessionRepository: GameSessionRepository,
     private timer: GameTimer,
     private session: GameSession,
-    private questionFactory : QuestionFactory
+    private questionFactory : QuestionFactory,
   ) { }
 
   static fromConfig(
@@ -49,6 +47,7 @@ export class GameEngine {
   async initialize(): Promise<void> {
       if (this.session.questions.length == 0) {
           await this.setSessionQuestions()
+          this.answers = this.session.questions.map(q => q.getAnswer())
       }
   }  
 
@@ -78,5 +77,18 @@ export class GameEngine {
   getSession(): GameSession { 
     return this.session
   }
+
+  nextQuestion(): Question | null {
+      return this.questionFactory.findNextQuestion(this.session.questions)
+  }
+
+  getAnswers() : Answer[] {
+    return this.answers
+  }
+
+  getAnswer(question: Question) : Answer {
+    return question.getAnswer()
+  }
+
 
 }

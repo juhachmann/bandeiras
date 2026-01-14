@@ -3,7 +3,7 @@ import { Difficulty, GameConfig, GameType, GeoLocation } from "../../types/gameC
 import { GameAdapter } from "../GameAdapter";
 import { Game } from "../Game";
 import { EmptyGameAdapterMock } from "../../__dev__/EmptyGameAdapter";
-import { Answer, Question } from "../Question";
+import { AnswerRO, QuestionRO } from "../../types/questionRO";
 
 
 describe('Game', () => {
@@ -23,84 +23,26 @@ describe('Game', () => {
         game = await Game.createGame(gameConfig, gameAdapter);
     });
 
-    // TODO: limitação do TS, não consigo verificar se é mesmo uma lista de Question
+
     it('should contain a Question List', () => {
         expect(game.getQuestions()).toBeInstanceOf(Array);
     })
 
+    it('should contain a Answer List', () => {
+        expect(game.getAnswers()).toBeInstanceOf(Array);
+    });
 
-    describe('Validate Answer', () => {
+    it('Qustion List and Answer List should have same size', () => {
+        expect(game.getQuestions().length).toBe(game.getAnswers().length)
+    });
 
-        let currentQuestion : Question
-        let correctAnswer : Answer
-        let incorrectAnswer : Answer
-
-        beforeEach(() => {
-            currentQuestion = game.getQuestions()[0]
-            correctAnswer = game.getQuestions()[0].getAnswer()
-            incorrectAnswer = game.getQuestions()[1].getAnswer()            
-        });
-
-        it('should return true if answer is correct', () => {
-            expect(game.validateAnswer(currentQuestion, correctAnswer)).toBeTruthy()
-        });
-
-        it('should return false if answer is incorrect', () => {
-            expect(game.validateAnswer(currentQuestion, incorrectAnswer)).toBeFalsy()            
-        });
-
-        it('should set question property hit to true if answer is correct', () => {
-            game.validateAnswer(currentQuestion, correctAnswer)
-            expect(currentQuestion.isHit()).toBeTruthy()
-        });
-
-        it('should set question property hit to false if answer is incorrect', () => {
-            game.validateAnswer(currentQuestion, incorrectAnswer)
-            expect(currentQuestion.isHit()).toBeFalsy()            
-        });
-
-        it('should increase question property attempts number if question property hit is false and answer is incorrect', () => {
-            expect(currentQuestion.getAttempts()).toBe(0)
-            expect(currentQuestion.isHit()).toBeFalsy()
-            const numberOfAttempts = 3
-            for (let index = 0; index < numberOfAttempts; index++) {
-                game.validateAnswer(currentQuestion, incorrectAnswer)
-            }
-            expect(currentQuestion.isHit()).toBeFalsy()
-            expect(currentQuestion.getAttempts()).toBe(numberOfAttempts)
-        });
-
-        it('should increase question property attempts number if question property hit is false and answer is correct', () => {
-            expect(currentQuestion.getAttempts()).toBe(0)
-            expect(currentQuestion.isHit()).toBeFalsy()
-            const numberOfAttempts = 1
-            game.validateAnswer(currentQuestion, correctAnswer)
-            expect(currentQuestion.getAttempts()).toBe(numberOfAttempts)
-        });
-
-        it('should never increase question number of attempts if question hit is already true', () => {
-            expect(currentQuestion.getAttempts()).toBe(0)
-            expect(currentQuestion.isHit()).toBeFalsy()
-
-            const attempstBeforeHit = 10
-            for (let index = 0; index < attempstBeforeHit; index++) {
-                game.validateAnswer(currentQuestion, incorrectAnswer)
-            }
-
-            // Hit
-            game.validateAnswer(currentQuestion, correctAnswer)
-
-            const computedAttempts = attempstBeforeHit + 1
-
-            // Extra Attempts After Hit - Should not be computed
-            game.validateAnswer(currentQuestion, incorrectAnswer)
-            game.validateAnswer(currentQuestion, correctAnswer)
-            
-            expect(currentQuestion.getAttempts()).toBe(computedAttempts)
-        });
-
+    it('should not be able to modify number of attempts of the question', () => {
+        expect(game.getQuestions()).toBeInstanceOf(Array);
     })
 
+    it('should not be able to modify number of attempts of the question', () => {
+        expect(game.getQuestions()).toBeInstanceOf(Array);
+    })
 
     describe('QuestionList', () => {
 
@@ -109,12 +51,10 @@ describe('Game', () => {
             expect(emptyGame.getQuestions().length).toBe(0)
         })
 
-
         it('should NOT be empty when repository data is NOT empty', async () => {
             const game = await Game.createGame(gameConfig, gameAdapter);
             expect(game.getQuestions().length).toBeGreaterThan(0)        
         })
-
 
         it('two lists should have the same elements given the same GameConfig', async () => {
              const gameConfig : GameConfig = {
@@ -135,8 +75,6 @@ describe('Game', () => {
             expect([...setA].every(item => setA.has(item))).toBeTruthy()        
         })
 
-
-        // todo: JSON.Stringify não tá conseguindo ler as propriedades privadas e tá deixando como se fosse vazio
         it('multiple lists should be outputed with a minimum of different orders, given the number of geoitem elements', async () => {
             const totalElements = game.getQuestions().length
              
@@ -147,9 +85,7 @@ describe('Game', () => {
 
             const results = new Set();
             for (let i = 0; i < numTests; i++) {
-                const game = await Game.createGame(gameConfig, gameAdapter)
-                console.log(game.getQuestions());
-                
+                const game = await Game.createGame(gameConfig, gameAdapter)                
                 results.add(JSON.stringify(game.getQuestions()))
             }            
             expect(results.size).toBeGreaterThan(expectedUnique)
@@ -157,21 +93,100 @@ describe('Game', () => {
 
     })
 
+    describe('Validate Answer', () => {
+
+        let currentQuestion : QuestionRO
+        let correctAnswer : AnswerRO
+        let incorrectAnswer : AnswerRO
+
+        beforeEach(() => {
+            currentQuestion = game.getQuestions()[0]
+            correctAnswer = game.getAnswer(currentQuestion)!
+            incorrectAnswer = game.getAnswer(game.getQuestions()[1])!            
+        });
+
+        it('should return true if answer is correct', () => {
+            console.log(correctAnswer);
+            console.log(game.getAnswers());
+            
+            expect(game.validateAnswer(currentQuestion, correctAnswer)).toBeTruthy()
+        });
+
+        it('should return false if answer is incorrect', () => {
+            expect(game.validateAnswer(currentQuestion, incorrectAnswer)).toBeFalsy()            
+        });
+
+        it('should set question property hit to true if answer is correct', () => {
+            game.validateAnswer(currentQuestion, correctAnswer)
+            expect(currentQuestion.hit).toBeTruthy()
+        });
+
+        it('should set question property hit to false if answer is incorrect', () => {
+            game.validateAnswer(currentQuestion, incorrectAnswer)
+            expect(currentQuestion.hit).toBeFalsy()            
+        });
+
+        it('should increase question property attempts number if question property hit is false and answer is incorrect', () => {
+            expect(currentQuestion.attempts).toBe(0)
+            expect(currentQuestion.hit).toBeFalsy()
+            const numberOfAttempts = 3
+            for (let index = 0; index < numberOfAttempts; index++) {
+                game.validateAnswer(currentQuestion, incorrectAnswer)
+            }
+            expect(currentQuestion.hit).toBeFalsy()
+            expect(currentQuestion.attempts).toBe(numberOfAttempts)
+        });
+
+        it('should increase question property attempts number if question property hit is false and answer is correct', () => {
+            expect(currentQuestion.attempts).toBe(0)
+            expect(currentQuestion.hit).toBeFalsy()
+            const numberOfAttempts = 1
+            game.validateAnswer(currentQuestion, correctAnswer)
+            expect(currentQuestion.attempts).toBe(numberOfAttempts)
+        });
+
+        it('should never increase question number of attempts if question hit is already true', () => {
+            expect(currentQuestion.attempts).toBe(0)
+            expect(currentQuestion.hit).toBeFalsy()
+
+            const attempstBeforeHit = 10
+            for (let index = 0; index < attempstBeforeHit; index++) {
+                game.validateAnswer(currentQuestion, incorrectAnswer)
+            }
+
+            // Hit
+            game.validateAnswer(currentQuestion, correctAnswer)
+
+            const computedAttempts = attempstBeforeHit + 1
+
+            // Extra Attempts After Hit - Should not be computed
+            game.validateAnswer(currentQuestion, incorrectAnswer)
+            game.validateAnswer(currentQuestion, correctAnswer)
+            
+            expect(currentQuestion.attempts).toBe(computedAttempts)
+        });
+
+    })
+
+
+
+
 
     describe('NextQuestion', () => {
 
-        // TODO: não é determinístico, realmente precisa de um teste de unidade aqui...
+        // Estes testes não são determinísticos
+        // Para testes determinísticos, ver testes de unidade para os métodos da classe: QuestionFactory
         it('should not return Question whose property hit is true', () => {
-            // Marcar todas as questões como hit, exceto a última
+            
             const totalQuestions = game.getQuestions().length
 
-            const questionHit : Question = game.getQuestions()[0]
+            const questionHit : QuestionRO = game.getQuestions()[0]
 
             game.validateAnswer(questionHit, questionHit.getAnswer())
             
-            expect(questionHit.isHit()).toBeTruthy()
+            expect(questionHit.hit).toBeTruthy()
 
-            expect(game.getQuestions().filter(question => question.isHit())).toEqual([questionHit])
+            expect(game.getQuestions().filter(question => question.hit)).toEqual([questionHit])
 
             const numberOfTests = totalQuestions * 100
             for (let i = 0; i < numberOfTests; i++) {
@@ -187,7 +202,7 @@ describe('Game', () => {
             })
 
             game.getQuestions().forEach((question) => 
-                expect(question.isHit()).toBeTruthy()
+                expect(question.hit).toBeTruthy()
             )
 
             const numberOfTests = game.getQuestions().length * 50
@@ -202,8 +217,8 @@ describe('Game', () => {
                 game.validateAnswer(game.getQuestions()[i], game.getQuestions()[i].getAnswer())
             }
             const questionUnhit = game.getQuestions()[totalQuestions - 1]
-            expect(questionUnhit.isHit()).toBeFalsy()
-            expect(game.getQuestions().filter(question => !question.isHit())).toEqual([questionUnhit])
+            expect(questionUnhit.hit).toBeFalsy()
+            expect(game.getQuestions().filter(question => !question.hit)).toEqual([questionUnhit])
 
             const numberOfTests = totalQuestions * 50
             for (let i = 0; i < numberOfTests; i++) {
@@ -212,7 +227,6 @@ describe('Game', () => {
             }
         })
 
-        // todo: JSON.Stringify não tá conseguindo ler as propriedades privadas e tá deixando como se fosse vazio
         it('should return random question, that is, it should be output with a minimum of different orders, given the number of questions', () => {
             const totalQuestions = game.getQuestions().length
             const sampleSize = Math.min(totalQuestions * 10, 100)

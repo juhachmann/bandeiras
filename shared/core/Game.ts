@@ -1,12 +1,12 @@
-import { GameSession } from "@/types/gameSession";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
 import { GameAdapter } from "@/core/GameAdapter";
 import { GameEngine } from "./GameEngine";
 import { Answer, Question } from "./Question";
+import { AnswerRO, QuestionRO } from "../types/questionRO";
 
 export class Game {
 
-    private gameEngine : GameEngine
+    private readonly gameEngine : GameEngine
 
     private constructor (
         gameConfig: GameConfig, 
@@ -56,26 +56,40 @@ export class Game {
 
     }
 
-    validateAnswer(question: Question, answer: Answer): boolean { 
-        return this.gameEngine.submitAnswer(question, answer)
+    validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): boolean { 
+        const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
+        const answer = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
+        if (!question || !answer) return false
+        const isValidAnswer = this.gameEngine.submitAnswer(question, answer)
+        
     }
     
     isGameOver(): boolean { 
         return this.gameEngine.isGameOver()
     }
 
-    getQuestions(): Question[] {
-        const session = this.gameEngine.getSession()        
-        return this.gameEngine.getSession().questions
+    getQuestions(): QuestionRO[] {       
+        return this.gameEngine.getSession().questions.map((q) => q.toJSON())
     }
 
-    nextQuestion() : Question | null {
-        return this.gameEngine.nextQuestion()
+    nextQuestion() : QuestionRO | null {
+        const nextQuestion = this.gameEngine.nextQuestion()
+        return nextQuestion ? nextQuestion.toJSON() : null
     }
 
-    getCurrentQuestion(): Question | null {
+    getCurrentQuestion(): QuestionRO | null {
         return null
     }
 
+    getAnswer(questionRO: QuestionRO) : AnswerRO | null {
+        const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
+        if (!question) return null
+        return this.gameEngine.getAnswer(question).toJSON()
+    }
+
+    getAnswers() : AnswerRO[] {
+        return this.gameEngine.getAnswers().map(a => a.toJSON())
+    }
+ 
 
 }

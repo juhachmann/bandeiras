@@ -1,10 +1,9 @@
-import { GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
+import { GameConfig, GameType } from "@/types/gameConfig";
 import { GeoItem } from "@/types/geoItem";
 import { Answer, Question, QuestionProps } from "./Question";
 
 export abstract class QuestionFactory {
 
-    // Será que a lista de geoItems tem que vir de fora ou essa classe que tem que pegar?
     abstract createQuestions(geoItems: GeoItem[]): Question[]
 
     abstract validateAnswer(question: Question, answer: Answer): boolean
@@ -20,19 +19,8 @@ export abstract class QuestionFactory {
         }
     }
 
-    protected shuffleList(array: any[]): any[] {
-        return array
-            .map(value => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
-    }
-
-    protected randomArrayIndex(arrayLength: number) {
-        return Math.floor(Math.random() * arrayLength)
-    }
-
     findNextQuestion(questions: Question[]): Question | null {
-        const candidates = questions.filter((question) => !question.isHit())
+        const candidates = this.filterHitQuestions(questions)
         const length = candidates.length
 
         if (length == 0) {
@@ -41,6 +29,21 @@ export abstract class QuestionFactory {
 
         const index = this.randomArrayIndex(length)
         return candidates[index]
+    }
+
+    protected shuffleList(array: any[]): any[] {
+        return array
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)
+    }
+
+    private randomArrayIndex(arrayLength: number) {
+        return Math.floor(Math.random() * arrayLength)
+    }
+
+    protected filterHitQuestions(questions: Question[]) : Question[] {
+        return questions.filter((question) => !question.isHit())
     }
 
 }

@@ -1,4 +1,4 @@
-import { Question } from "./Question"
+import { QuestionRO } from "../types/questionRO"
 
 export class ScoreCalculator {
 
@@ -7,12 +7,12 @@ export class ScoreCalculator {
   }
   
   
-  calculateFinalScore(questions: Question[]): number {
+  calculateFinalScore(questions: QuestionRO[]): number {
     return 0
   }
   
   
-  calculateAccuracy(questions: Question[]): number {
+  calculateAccuracy(questions: QuestionRO[]): number {
     return 0
   }
 
