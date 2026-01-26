@@ -1,4 +1,4 @@
-import { FlagQuestionFactory } from "../QuestionFactoy";
+import { FlagQuestionFactory } from "../QuestionFactory";
 import { Question, Answer } from "../Question";
 
 // Classe auxiliar para testar métodos privados

@@ -2,7 +2,7 @@ import { GameSessionRepository, GeoItemRepository } from "@/types/repository";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
 import { GameSession } from "@/types/gameSession";
 import { GameTimer } from "../types/GameTimer";
-import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactoy";
+import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactory";
 import { Answer, Question } from "./Question";
 
 export class GameEngine {
@@ -67,7 +67,14 @@ export class GameEngine {
   }
   
   submitAnswer(question: Question, answer: Answer): boolean {
-    return this.questionFactory.validateAnswer(question, answer) 
+    if (!question.isHit()) {
+      question.attempt()
+    }
+    const answerIsCorrect : boolean = this.questionFactory.validateAnswer(question, answer)
+    if (answerIsCorrect) {
+      question.hit()
+    }
+    return answerIsCorrect
   }
   
   isGameOver(): boolean { 

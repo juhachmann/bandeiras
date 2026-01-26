@@ -3,6 +3,8 @@ import { GameAdapter } from "@/core/GameAdapter";
 import { GameEngine } from "./GameEngine";
 import { Answer, Question } from "./Question";
 import { AnswerRO, QuestionRO } from "../types/questionRO";
+import { GameError } from "./errors";
+
 
 export class Game {
 
@@ -56,11 +58,17 @@ export class Game {
 
     }
 
-    validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): boolean { 
-        const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
-        const answer = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
-        if (!question || !answer) return false
-        const isValidAnswer = this.gameEngine.submitAnswer(question, answer)
+    validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): QuestionRO { 
+        const question : Question | undefined = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
+        if (!question) 
+            throw new GameError(`Question #${questionRO.id} NOT FOUND in this game session`)
+        
+        const answer : Answer | undefined = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
+        if (!answer) 
+            throw new GameError(`Answer #${answerRO.id} NOT found in this game session`)
+        
+        this.gameEngine.submitAnswer(question, answer)
+        return question.toJSON()
         
     }
     

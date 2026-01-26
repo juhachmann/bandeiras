@@ -52,13 +52,7 @@ export abstract class QuestionFactory {
 export class FlagQuestionFactory extends QuestionFactory {
     
     validateAnswer(question: Question, answer: Answer): boolean {
-        if (!question.isHit()) {
-            question.attempted()
-        }
-        const isCorrect : boolean = question.getId() == answer.getId()
-        if (isCorrect && !question.isHit()) {
-            question.hit()
-        }
+        const isCorrect : boolean = question.getGeoItemId() == answer.getGeoItemId()
         return isCorrect
     }
 

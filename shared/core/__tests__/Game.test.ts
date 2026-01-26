@@ -105,65 +105,56 @@ describe('Game', () => {
             incorrectAnswer = game.getAnswer(game.getQuestions()[1])!            
         });
 
-        it('should return true if answer is correct', () => {
-            console.log(correctAnswer);
-            console.log(game.getAnswers());
-            
-            expect(game.validateAnswer(currentQuestion, correctAnswer)).toBeTruthy()
+        it('should set "result" question property hit to true if answer is correct', () => {
+            const result = game.validateAnswer(currentQuestion, correctAnswer)
+            expect(result.hit).toBeTruthy()
         });
 
-        it('should return false if answer is incorrect', () => {
-            expect(game.validateAnswer(currentQuestion, incorrectAnswer)).toBeFalsy()            
+        it('should set "result" question property hit to false if answer is incorrect', () => {
+            const result = game.validateAnswer(currentQuestion, incorrectAnswer)
+            expect(result.hit).toBeFalsy()            
         });
 
-        it('should set question property hit to true if answer is correct', () => {
-            game.validateAnswer(currentQuestion, correctAnswer)
-            expect(currentQuestion.hit).toBeTruthy()
-        });
-
-        it('should set question property hit to false if answer is incorrect', () => {
-            game.validateAnswer(currentQuestion, incorrectAnswer)
-            expect(currentQuestion.hit).toBeFalsy()            
-        });
-
-        it('should increase question property attempts number if question property hit is false and answer is incorrect', () => {
+        it('should increase "result" question property attempts number if question property hit is false and answer is incorrect', () => {
             expect(currentQuestion.attempts).toBe(0)
             expect(currentQuestion.hit).toBeFalsy()
             const numberOfAttempts = 3
+            let resultQuestion = currentQuestion
             for (let index = 0; index < numberOfAttempts; index++) {
-                game.validateAnswer(currentQuestion, incorrectAnswer)
+                resultQuestion = game.validateAnswer(resultQuestion, incorrectAnswer)
             }
-            expect(currentQuestion.hit).toBeFalsy()
-            expect(currentQuestion.attempts).toBe(numberOfAttempts)
+            expect(resultQuestion.hit).toBeFalsy()
+            expect(resultQuestion.attempts).toBe(numberOfAttempts)
         });
 
-        it('should increase question property attempts number if question property hit is false and answer is correct', () => {
+        it('should increase "result" question property attempts number if question property hit is false and answer is correct', () => {
             expect(currentQuestion.attempts).toBe(0)
             expect(currentQuestion.hit).toBeFalsy()
             const numberOfAttempts = 1
-            game.validateAnswer(currentQuestion, correctAnswer)
-            expect(currentQuestion.attempts).toBe(numberOfAttempts)
+            const resultQuestion = game.validateAnswer(currentQuestion, correctAnswer)
+            expect(resultQuestion?.attempts).toBe(numberOfAttempts)
         });
 
-        it('should never increase question number of attempts if question hit is already true', () => {
+        it('should never increase "result" question number of attempts if question hit is already true', () => {
             expect(currentQuestion.attempts).toBe(0)
             expect(currentQuestion.hit).toBeFalsy()
 
             const attempstBeforeHit = 10
+            let resultQuestion = currentQuestion
             for (let index = 0; index < attempstBeforeHit; index++) {
-                game.validateAnswer(currentQuestion, incorrectAnswer)
+                resultQuestion = game.validateAnswer(resultQuestion, incorrectAnswer)
             }
 
             // Hit
-            game.validateAnswer(currentQuestion, correctAnswer)
+            resultQuestion = game.validateAnswer(resultQuestion, correctAnswer)
 
             const computedAttempts = attempstBeforeHit + 1
 
             // Extra Attempts After Hit - Should not be computed
-            game.validateAnswer(currentQuestion, incorrectAnswer)
-            game.validateAnswer(currentQuestion, correctAnswer)
+            resultQuestion = game.validateAnswer(currentQuestion, incorrectAnswer)
+            resultQuestion = game.validateAnswer(currentQuestion, correctAnswer)
             
-            expect(currentQuestion.attempts).toBe(computedAttempts)
+            expect(resultQuestion.attempts).toBe(computedAttempts)
         });
 
     })
@@ -180,45 +171,58 @@ describe('Game', () => {
             
             const totalQuestions = game.getQuestions().length
 
-            const questionHit : QuestionRO = game.getQuestions()[0]
-
-            game.validateAnswer(questionHit, questionHit.getAnswer())
+            const question : QuestionRO = game.getQuestions()[0]
+            const questionId = question.id
             
-            expect(questionHit.hit).toBeTruthy()
+            let result = game.validateAnswer(question, game.getAnswer(question)!)
+            
+            expect(result.hit).toBeTruthy()
 
-            expect(game.getQuestions().filter(question => question.hit)).toEqual([questionHit])
+            expect(game.getQuestions().filter(question => question.hit).map(q => q.id)).toEqual([questionId])
 
             const numberOfTests = totalQuestions * 100
             for (let i = 0; i < numberOfTests; i++) {
-                expect(game.nextQuestion()).not.toBe(questionHit)
+                expect(game.nextQuestion()?.id).not.toBe(questionId)
             }
 
         })
 
         it('should return null if all Questions property hit are true', () => {
             
-            game.getQuestions().forEach((question) => {
-                game.validateAnswer(question, question.getAnswer())
+            const gameQuestions = game.getQuestions()
+            const validatedQuestions : QuestionRO[] = []
+
+            gameQuestions.forEach((question) => {
+                validatedQuestions.push(game.validateAnswer(question, game.getAnswer(question)!))
             })
 
-            game.getQuestions().forEach((question) => 
+            validatedQuestions.forEach((question) => 
                 expect(question.hit).toBeTruthy()
             )
 
-            const numberOfTests = game.getQuestions().length * 50
+            const numberOfTests = gameQuestions.length * 50
             for (let i = 0; i < numberOfTests; i++) {
                 expect(game.nextQuestion()).toBeNull()
             }
         })
         
         it('should not return null, when there is at least one Question whose property hit is false', () => {
-            const totalQuestions = game.getQuestions().length
+            const gameQuestions = game.getQuestions()
+            const totalQuestions = gameQuestions.length
+            const validatedQuestions : QuestionRO[] = []
             for (let i = 0; i < totalQuestions - 1; i++) {
-                game.validateAnswer(game.getQuestions()[i], game.getQuestions()[i].getAnswer())
+                const validatedQuestion = game.validateAnswer(gameQuestions[i], game.getAnswer(gameQuestions[i])!)
+                validatedQuestions.push(validatedQuestion)
             }
-            const questionUnhit = game.getQuestions()[totalQuestions - 1]
+            // TODO: parei aqui!!!
+            const questionUnhit = gameQuestions[totalQuestions - 1]
             expect(questionUnhit.hit).toBeFalsy()
-            expect(game.getQuestions().filter(question => !question.hit)).toEqual([questionUnhit])
+
+            console.log(validatedQuestions);
+            console.log(questionUnhit);
+            
+            
+            expect(validatedQuestions.filter(question => !question.hit).map(q => q.id)).toEqual([questionUnhit.id])
 
             const numberOfTests = totalQuestions * 50
             for (let i = 0; i < numberOfTests; i++) {

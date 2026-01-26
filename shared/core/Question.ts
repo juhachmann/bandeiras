@@ -25,6 +25,7 @@ export interface AnswerProps {
 export class Question {
     
     private readonly geoItemId: string
+    private readonly id: string
     private readonly text: string
     private readonly image: string | null = null
     private readonly hint: string | null = null
@@ -35,13 +36,18 @@ export class Question {
         questionProps : QuestionProps
     ) {
         this.geoItemId = questionProps.geoItemId
+        this.id = this.geoItemId
         this.answer = questionProps.answer
         this.status = questionProps.status
         this.text = questionProps.text
     }
 
-    getId() : string {
+    getGeoItemId() : string {
         return this.geoItemId
+    }
+
+    getId() : string {
+        return this.id
     }
 
     getAnswer() : Answer {
@@ -68,7 +74,7 @@ export class Question {
         return this.status.attempts
     }
 
-    attempted() : void {
+    attempt() : void {
         this.status.attempts++
     }
 
@@ -92,19 +98,25 @@ export class Question {
 export class Answer {
 
     private readonly geoItemId: string
+    private readonly id: string
     private readonly text: string
     private readonly image: string | null
     private readonly info: string | null
 
     constructor (answerProps : AnswerProps) {
         this.geoItemId = answerProps.geoItemId
+        this.id = this.geoItemId
         this.text = answerProps.text
         this.image = answerProps.image ?? null
         this.info = answerProps.info ?? null
     }
 
-    getId() : string {
+    getGeoItemId() : string {
         return this.geoItemId
+    }
+
+    getId() : string {
+        return this.id
     }
 
     getText() : string {
