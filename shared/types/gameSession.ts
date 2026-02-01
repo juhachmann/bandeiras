@@ -1,5 +1,5 @@
 import { Question } from '@/core/Question';
-import { GameConfig } from '@/types/gameConfig'
+import { GameConfig } from '@/types/GameConfig'
 
 export interface GameSession {
   session_id?: string;

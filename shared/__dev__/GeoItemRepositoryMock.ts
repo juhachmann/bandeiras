@@ -1,7 +1,7 @@
 import { brazil, latinAmerica } from "@/__dev__/data/geoItems"
-import { GeoItemRepository } from "@/types/repository"
-import { GeoItem } from "@/types/geoItem"
-import { GeoLocation } from "@/types/gameConfig"
+import { GeoItemRepository } from "@/types/repositories"
+import { GeoItem } from "@/types/GeoItem"
+import { GeoLocation } from "@/types/GameConfig"
 
 
 export class geoItemRepositoryMock implements GeoItemRepository {

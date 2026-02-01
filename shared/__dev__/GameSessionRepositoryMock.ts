@@ -1,4 +1,4 @@
-import { GameSessionRepository } from "@/types/repository"
+import { GameSessionRepository } from "@/types/repositories"
 import { GameSession } from "@/types/gameSession"
 import { GameType } from "@/types"
 

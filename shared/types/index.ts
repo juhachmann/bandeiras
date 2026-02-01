@@ -1,6 +1,0 @@
-export * from './gameConfig'
-export * from './gameSession'
-export * from './geoItem'
-export type {QuestionRO as Question, AnswerRO as Answer} from './questionRO'
-export * from './repository'
-export * from './GameTimer'

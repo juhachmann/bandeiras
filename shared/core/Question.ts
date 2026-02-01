@@ -1,4 +1,4 @@
-import { QuestionRO, AnswerRO } from "../types/questionRO";
+import { Answer } from "./Answer";
 
 export interface QuestionStatus {
   attempts: number;
@@ -6,7 +6,7 @@ export interface QuestionStatus {
 }
 
 export interface QuestionProps {
-  geoItemId: string;
+  id: string;
   text: string;
   image?: string;
   hint?: string;
@@ -14,17 +14,9 @@ export interface QuestionProps {
   status: QuestionStatus;
 }
 
-export interface AnswerProps {
-  geoItemId: string;
-  text: string;
-  image?: string;
-  info?: string;
-}
-
 
 export class Question {
     
-    private readonly geoItemId: string
     private readonly id: string
     private readonly text: string
     private readonly image: string | null = null
@@ -35,15 +27,10 @@ export class Question {
     constructor(
         questionProps : QuestionProps
     ) {
-        this.geoItemId = questionProps.geoItemId
-        this.id = this.geoItemId
+        this.id = questionProps.id
         this.answer = questionProps.answer
         this.status = questionProps.status
         this.text = questionProps.text
-    }
-
-    getGeoItemId() : string {
-        return this.geoItemId
     }
 
     getId() : string {
@@ -74,70 +61,22 @@ export class Question {
         return this.status.attempts
     }
 
-    attempt() : void {
-        this.status.attempts++
-    }
+    attempt(answer : Answer) : boolean {
+        const isCorrectAnswer = answer == this.answer
 
-    hit() : void {
-        this.status.hit = true
-    }
+        if (!this.isHit()) {
+            
+            this.status.attempts++
 
-    toJSON() : QuestionRO {
-        return {
-            id: this.geoItemId,
-            text: this.text,
-            image: this.image ?? undefined,
-            hint: this.hint ?? undefined,
-            attempts: this.status.attempts,
-            hit: this.status.hit
+            if (isCorrectAnswer) {
+                this.status.hit = true
+            }
+
         }
+        
+        return isCorrectAnswer
+        
     }
 
 }
 
-export class Answer {
-
-    private readonly geoItemId: string
-    private readonly id: string
-    private readonly text: string
-    private readonly image: string | null
-    private readonly info: string | null
-
-    constructor (answerProps : AnswerProps) {
-        this.geoItemId = answerProps.geoItemId
-        this.id = this.geoItemId
-        this.text = answerProps.text
-        this.image = answerProps.image ?? null
-        this.info = answerProps.info ?? null
-    }
-
-    getGeoItemId() : string {
-        return this.geoItemId
-    }
-
-    getId() : string {
-        return this.id
-    }
-
-    getText() : string {
-        return this.text
-    }
-
-    getImage() : string | null {
-        return this.image
-    }
-
-    getInfo() : string | null {
-        return this.info
-    }
-
-    toJSON() : AnswerRO {
-        return {
-            id: this.geoItemId,
-            text: this.text,
-            image: this.image ?? undefined,
-            info: this.info ?? undefined
-        }
-    }
-
-}

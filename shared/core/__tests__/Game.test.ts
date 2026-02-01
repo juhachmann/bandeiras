@@ -1,9 +1,10 @@
 import { GameAdapterMock } from "../../__dev__/GameAdapterMock";
-import { Difficulty, GameConfig, GameType, GeoLocation } from "../../types/gameConfig";
+import { Difficulty, GameConfig, GameType, GeoLocation } from "../../types/GameConfig";
 import { GameAdapter } from "../GameAdapter";
 import { Game } from "../Game";
 import { EmptyGameAdapterMock } from "../../__dev__/EmptyGameAdapter";
-import { AnswerRO, QuestionRO } from "../../types/questionRO";
+import { Answer } from "../Answer";
+import { Question } from "../Question";
 
 
 describe('Game', () => {
@@ -23,35 +24,18 @@ describe('Game', () => {
         game = await Game.createGame(gameConfig, gameAdapter);
     });
 
+    describe('getQuestions', () => {
 
-    it('should contain a Question List', () => {
-        expect(game.getQuestions()).toBeInstanceOf(Array);
-    })
+        it('should contain a Question List', () => {
+            expect(game.getQuestions()).toBeInstanceOf(Array);
+        })
 
-    it('should contain a Answer List', () => {
-        expect(game.getAnswers()).toBeInstanceOf(Array);
-    });
-
-    it('Qustion List and Answer List should have same size', () => {
-        expect(game.getQuestions().length).toBe(game.getAnswers().length)
-    });
-
-    it('should not be able to modify number of attempts of the question', () => {
-        expect(game.getQuestions()).toBeInstanceOf(Array);
-    })
-
-    it('should not be able to modify number of attempts of the question', () => {
-        expect(game.getQuestions()).toBeInstanceOf(Array);
-    })
-
-    describe('QuestionList', () => {
-
-        it('should be empty when repository data is empty', async () => {
+        it('should return empty list when repository data is empty', async () => {
             const emptyGame = await Game.createGame(gameConfig, emptyGameAdapter) 
             expect(emptyGame.getQuestions().length).toBe(0)
         })
 
-        it('should NOT be empty when repository data is NOT empty', async () => {
+        it('should NOT return empty list when repository data is NOT empty', async () => {
             const game = await Game.createGame(gameConfig, gameAdapter);
             expect(game.getQuestions().length).toBeGreaterThan(0)        
         })
@@ -93,75 +77,6 @@ describe('Game', () => {
 
     })
 
-    describe('Validate Answer', () => {
-
-        let currentQuestion : QuestionRO
-        let correctAnswer : AnswerRO
-        let incorrectAnswer : AnswerRO
-
-        beforeEach(() => {
-            currentQuestion = game.getQuestions()[0]
-            correctAnswer = game.getAnswer(currentQuestion)!
-            incorrectAnswer = game.getAnswer(game.getQuestions()[1])!            
-        });
-
-        it('should set "result" question property hit to true if answer is correct', () => {
-            const result = game.validateAnswer(currentQuestion, correctAnswer)
-            expect(result.hit).toBeTruthy()
-        });
-
-        it('should set "result" question property hit to false if answer is incorrect', () => {
-            const result = game.validateAnswer(currentQuestion, incorrectAnswer)
-            expect(result.hit).toBeFalsy()            
-        });
-
-        it('should increase "result" question property attempts number if question property hit is false and answer is incorrect', () => {
-            expect(currentQuestion.attempts).toBe(0)
-            expect(currentQuestion.hit).toBeFalsy()
-            const numberOfAttempts = 3
-            let resultQuestion = currentQuestion
-            for (let index = 0; index < numberOfAttempts; index++) {
-                resultQuestion = game.validateAnswer(resultQuestion, incorrectAnswer)
-            }
-            expect(resultQuestion.hit).toBeFalsy()
-            expect(resultQuestion.attempts).toBe(numberOfAttempts)
-        });
-
-        it('should increase "result" question property attempts number if question property hit is false and answer is correct', () => {
-            expect(currentQuestion.attempts).toBe(0)
-            expect(currentQuestion.hit).toBeFalsy()
-            const numberOfAttempts = 1
-            const resultQuestion = game.validateAnswer(currentQuestion, correctAnswer)
-            expect(resultQuestion?.attempts).toBe(numberOfAttempts)
-        });
-
-        it('should never increase "result" question number of attempts if question hit is already true', () => {
-            expect(currentQuestion.attempts).toBe(0)
-            expect(currentQuestion.hit).toBeFalsy()
-
-            const attempstBeforeHit = 10
-            let resultQuestion = currentQuestion
-            for (let index = 0; index < attempstBeforeHit; index++) {
-                resultQuestion = game.validateAnswer(resultQuestion, incorrectAnswer)
-            }
-
-            // Hit
-            resultQuestion = game.validateAnswer(resultQuestion, correctAnswer)
-
-            const computedAttempts = attempstBeforeHit + 1
-
-            // Extra Attempts After Hit - Should not be computed
-            resultQuestion = game.validateAnswer(currentQuestion, incorrectAnswer)
-            resultQuestion = game.validateAnswer(currentQuestion, correctAnswer)
-            
-            expect(resultQuestion.attempts).toBe(computedAttempts)
-        });
-
-    })
-
-
-
-
 
     describe('NextQuestion', () => {
 
@@ -169,69 +84,77 @@ describe('Game', () => {
         // Para testes determinísticos, ver testes de unidade para os métodos da classe: QuestionFactory
         it('should not return Question whose property hit is true', () => {
             
+            const questionHit : Question = game.getQuestions()[0]
+            
+            // Forçando mudança interna de status
+            questionHit['status'].hit = true
+            
+            expect(questionHit.isHit()).toBeTruthy()
+
+            expect(game.getQuestions().filter(question => question.isHit()).map(q => q.getId())).toEqual([questionHit.getId()])
+
+            // Teste probabilístico
             const totalQuestions = game.getQuestions().length
-
-            const question : QuestionRO = game.getQuestions()[0]
-            const questionId = question.id
-            
-            let result = game.validateAnswer(question, game.getAnswer(question)!)
-            
-            expect(result.hit).toBeTruthy()
-
-            expect(game.getQuestions().filter(question => question.hit).map(q => q.id)).toEqual([questionId])
-
             const numberOfTests = totalQuestions * 100
             for (let i = 0; i < numberOfTests; i++) {
-                expect(game.nextQuestion()?.id).not.toBe(questionId)
+                expect(game.nextQuestion()?.getId()).not.toBe(questionHit.getId())
             }
 
         })
 
-        it('should return null if all Questions property hit are true', () => {
+        it('should return null if all Questions are already hit', () => {
             
             const gameQuestions = game.getQuestions()
-            const validatedQuestions : QuestionRO[] = []
 
             gameQuestions.forEach((question) => {
-                validatedQuestions.push(game.validateAnswer(question, game.getAnswer(question)!))
+                // Força a mudança de status
+                question["status"].hit = true
             })
 
-            validatedQuestions.forEach((question) => 
-                expect(question.hit).toBeTruthy()
+            gameQuestions.forEach((question) => 
+                expect(question.isHit()).toBeTruthy()
             )
 
+            // Teste probabilístico
             const numberOfTests = gameQuestions.length * 50
             for (let i = 0; i < numberOfTests; i++) {
                 expect(game.nextQuestion()).toBeNull()
             }
         })
         
-        it('should not return null, when there is at least one Question whose property hit is false', () => {
+        it('should always return same question, when there is only one Question whose property hit is false', () => {
             const gameQuestions = game.getQuestions()
             const totalQuestions = gameQuestions.length
-            const validatedQuestions : QuestionRO[] = []
+
+            expect(totalQuestions).toBeGreaterThan(0)
+
+            // Força Hit em todas as questões menos na última
             for (let i = 0; i < totalQuestions - 1; i++) {
-                const validatedQuestion = game.validateAnswer(gameQuestions[i], game.getAnswer(gameQuestions[i])!)
-                validatedQuestions.push(validatedQuestion)
+                gameQuestions[i]['status'].hit = true
             }
-            // TODO: parei aqui!!!
-            const questionUnhit = gameQuestions[totalQuestions - 1]
-            expect(questionUnhit.hit).toBeFalsy()
 
-            console.log(validatedQuestions);
-            console.log(questionUnhit);
-            
-            
-            expect(validatedQuestions.filter(question => !question.hit).map(q => q.id)).toEqual([questionUnhit.id])
+            // Checa se a "última" questão está unHit
+            const unHitQuestion = gameQuestions[totalQuestions - 1]
+            expect(unHitQuestion.isHit()).toBeFalsy()
 
+            // Checa se há apenas uma questão "unHit"
+            const unHitQuestionList = gameQuestions.filter(q => !q.isHit())
+            expect(unHitQuestionList.length).toBe(1)
+
+            // Checa se a questão unHit tem o mesmo ID da que sobrou na lista filtrada
+            expect(unHitQuestionList.map(q => q.getId())).toStrictEqual([unHitQuestion.getId()])
+
+            // Teste probabilístico: nunca deve retornar Null e sempre deve retornar a mesma questão "UnHit"
             const numberOfTests = totalQuestions * 50
             for (let i = 0; i < numberOfTests; i++) {
                 const nextQuestion = game.nextQuestion()
                 expect(nextQuestion).not.toBeNull()
+                expect(nextQuestion?.isHit()).toBeFalsy()
+                expect(nextQuestion?.getId()).toEqual(unHitQuestion.getId())
             }
         })
 
-        it('should return random question, that is, it should be output with a minimum of different orders, given the number of questions', () => {
+        it('should return random question, that is, it should output a minimum of different question orders, given the number of questions', () => {
             const totalQuestions = game.getQuestions().length
             const sampleSize = Math.min(totalQuestions * 10, 100)
             
@@ -253,6 +176,38 @@ describe('Game', () => {
         })
 
     })
+
+
+    describe('getAnswers', () => {
+
+        it('should contain a Answer List', () => {
+            expect(game.getAnswers()).toBeInstanceOf(Array);
+        });
+
+
+        it('Question List and Answer List should have same size', () => {
+            expect(game.getQuestions().length).toBe(game.getAnswers().length)
+        });
+
+    })
+
+    describe('currentQuestion', () => {
+
+        it('...', () => {
+            expect(true).toBeTruthy()
+        });
+
+    })
+
+
+    describe('isOver', () => {
+
+        it('...', () => {
+            expect(true).toBeTruthy()
+        });
+
+    })
+
 
 })
 

@@ -1,5 +1,6 @@
 import { FlagQuestionFactory } from "../QuestionFactory";
-import { Question, Answer } from "../Question";
+import { Question } from "../Question";
+import { Answer } from "../Answer";
 
 // Classe auxiliar para testar métodos privados
 class TestableQuestionFactory extends FlagQuestionFactory {
@@ -19,21 +20,21 @@ describe('QuestionFactory', () => {
         // Criar questões de teste
         questions = [
             new Question({
-                geoItemId: "1",
+                id: "1",
                 text: "Question 1",
-                answer: new Answer({ geoItemId: "1", text: "Answer 1" }),
+                answer: new Answer({ id: "1", text: "Answer 1", allMatched: false }),
                 status: { attempts: 0, hit: false }
             }),
             new Question({
-                geoItemId: "2",
+                id: "2",
                 text: "Question 2",
-                answer: new Answer({ geoItemId: "2", text: "Answer 2" }),
+                answer: new Answer({ id: "2", text: "Answer 2", allMatched: false }),
                 status: { attempts: 0, hit: false }
             }),
             new Question({
-                geoItemId: "3",
+                id: "3",
                 text: "Question 3",
-                answer: new Answer({ geoItemId: "3", text: "Answer 3" }),
+                answer: new Answer({ id: "3", text: "Answer 3", allMatched: false }),
                 status: { attempts: 0, hit: false }
             })
         ];
@@ -42,7 +43,7 @@ describe('QuestionFactory', () => {
     describe('findNextQuestion', () => {
 
         it('should return null when all questions are hit', () => {
-            questions.forEach(q => q.hit());
+            questions.forEach(q => q['status'].hit = true);
             
             const result = factory.findNextQuestion(questions);
             
@@ -73,7 +74,7 @@ describe('QuestionFactory', () => {
         });
 
         it('should return empty array when all questions are hit', () => {
-            questions.forEach(q => q.hit());
+            questions.forEach(q => q['status'].hit = true);
             
             const result = testableFactory.testFilterHitQuestions(questions);
             
@@ -88,8 +89,8 @@ describe('QuestionFactory', () => {
         });
 
         it('should return only non-hit questions', () => {
-            questions[0].hit();
-            questions[2].hit();
+            questions[0]['status'].hit = true;
+            questions[2]['status'].hit = true;
             
             const result = testableFactory.testFilterHitQuestions(questions);
             

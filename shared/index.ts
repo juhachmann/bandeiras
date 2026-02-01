@@ -1,5 +1,7 @@
-// Core exports
-export * from '@/core'
-
-// Types exports
-export * from '@/types'
+// Exportar:
+// Question, Answer
+// GameConfig
+// Repository, GeoItem
+// GameSession, Game
+// GameException, GameSessionException
+// E é tudo por enquanto!
