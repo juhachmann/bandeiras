@@ -67,7 +67,9 @@ export class FlagQuestionFactory extends QuestionFactory {
                 status: {
                     attempts: 0,
                     hit: false
-                }
+                },
+                geoLocation: geoItem.geoLocation,
+                type: GameType.FLAGS
             }
             return new Question(questionProps)
         })

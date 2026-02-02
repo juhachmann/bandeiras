@@ -1,107 +1,88 @@
-import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
-import { GameAdapter } from "@/core/GameAdapter";
-import { GameEngine } from "./GameEngine";
+import { GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
 import { Question } from "./Question";
-import { GameError } from "./errors";
+import { GeoItem } from "@/types/GeoItem";
+import { QuestionFactory } from "./QuestionFactory";
 import { Answer } from "./Answer";
 
-
-// TODO: expor Game (GameEngine) e GameSession => duas classes diferentes
-// GameSession = load, new, save, quit, isGameOver, getScore, getTime, getStats
-// Game = getQuestions, getAnswers, nextQuestion, currentQuestion
 export class Game {
-
-    private readonly gameEngine : GameEngine
-
-    private constructor (
-        gameConfig: GameConfig, 
-        adpater: GameAdapter
-    ) { 
-        const itemRepo = adpater.getGeoItemRepository()
-        const sessionRepo = adpater.getSessionRepository()
-        const timer = adpater.getTimer()
-        this.gameEngine = GameEngine.fromConfig(itemRepo, sessionRepo, timer, gameConfig)
-    }
-
-    static async createGame(gameConfig: GameConfig, gameAdapter: GameAdapter): Promise<Game> {
-        const game = new Game(gameConfig, gameAdapter);
-        await game.gameEngine.initialize();
-        return game;
-    }
-
-    static async loadGame(sessionId: string, gameAdapter: GameAdapter): Promise<Game | undefined> {
-        // Retrieve config from repository, se não encontrar, não retorna nada? Retorna um Optional? 
-        const gameConfig : GameConfig = {
-            gameType: GameType.FLAGS,
-            location: GeoLocation.BRAZIL,
-            difficulty: Difficulty.EASY
-        }
-        // Aqui vai fazer o Game Engine from Session!!
-        return new Game(gameConfig, gameAdapter);
-    }
-
-    start() : void {
-
-    }
-
-    async save(): Promise<void> {
-        // Salva GameSession e GameProgress ... 
-        // ... se GameProgress estiver como não iniciado ou terminado, não precisa salvar as questões
-    }
-
-    async end(): Promise<void> {
     
+    private questions : Question[] = []
+    private answers: Answer[] = []
+    private currentQuestion : Question | null = null
+
+    constructor(
+        private readonly gameconfig : GameConfig,
+        private readonly geoItems: GeoItem[]
+    ) {
+        this.setQuestions()
+        this.setAnswers()
+        this.setInitialQuestion()
     }
 
-    pause() {
-
+    getGeoLocation(): GeoLocation {
+        return this.gameconfig.location
     }
 
-    resume() {
-
-    }
-
-    // Fica em Question
-    // validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): QuestionRO { 
-    //     const question : Question | undefined = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
-    //     if (!question) 
-    //         throw new GameError(`Question #${questionRO.id} NOT FOUND in this game session`)
-        
-    //     const answer : Answer | undefined = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
-    //     if (!answer) 
-    //         throw new GameError(`Answer #${answerRO.id} NOT found in this game session`)
-        
-    //     this.gameEngine.submitAnswer(question, answer)
-    //     return question.toJSON()
-        
-    // }
-    
-    isGameOver(): boolean { 
-        return this.gameEngine.isGameOver()
-    }
-
-    getQuestions(): Question[] {       
-        return this.gameEngine.getSession().questions
+    getGameType(): GameType {
+        return this.gameconfig.gameType
     }
 
     nextQuestion() : Question | null {
-        return this.gameEngine.nextQuestion()
+        if (this.questions.length == 0) {
+            return null
+        }
+        const nextQuestion = this.getRandomValidQuestion()
+        this.currentQuestion = nextQuestion
+        return nextQuestion
+    }
+
+    getQuestions(): Question[] {
+        return this.questions
+    }
+
+    getAnswers() : Answer[] {
+        return this.answers
     }
 
     getCurrentQuestion(): Question | null {
-        return null
+        return this.currentQuestion
     }
 
-    // Vai ficar em Question
-    // getAnswer(questionRO: QuestionRO) : AnswerRO | null {
-    //     const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
-    //     if (!question) return null
-    //     return this.gameEngine.getAnswer(question).toJSON()
-    // }
 
-    getAnswers() : Answer[] {
-        return this.gameEngine.getAnswers()
+    private setQuestions() : void {
+        if (this.geoItems.length > 0) {
+            const questionFactory = QuestionFactory.create(this.gameconfig)
+            this.questions = questionFactory.createQuestions(this.geoItems)
+        }
     }
- 
+
+    private setAnswers() : void {
+        if (this.questions.length > 0) {
+            this.answers = this.questions.map(question => question.getAnswer())
+        }
+    }
+
+    private setInitialQuestion() : void {
+        this.nextQuestion()
+    }
+
+    private getRandomValidQuestion() : Question | null {
+        const candidates = this.questions.filter((question) => !question.isHit())
+        const length = candidates.length
+
+        if (length == 0) {
+            return null
+        }
+
+        const index = this.randomArrayIndex(length)
+        return candidates[index]
+
+    }
+
+    private randomArrayIndex(arrayLength: number) {
+        return Math.floor(Math.random() * arrayLength)
+    }
+
+   
 
 }

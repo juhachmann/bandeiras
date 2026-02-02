@@ -1,3 +1,4 @@
+import { IAnswer } from "./IGame";
 
 export interface AnswerProps {
   id: string;
@@ -7,7 +8,7 @@ export interface AnswerProps {
   allMatched: boolean
 }
 
-export class Answer {
+export class Answer implements IAnswer {
 
     private readonly id: string
     private readonly text: string

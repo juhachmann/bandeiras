@@ -1,7 +1,9 @@
+import { GeoLocation } from "./GameConfig";
 
 export interface GeoItem {
   country: Country;
   flag: Flag;
+  geoLocation: GeoLocation
 }
 
 export interface Flag {

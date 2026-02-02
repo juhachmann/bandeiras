@@ -1,4 +1,6 @@
+import { GameType, GeoLocation } from "@/types/GameConfig";
 import { Answer } from "./Answer";
+import { IQuestion } from "./IGame";
 
 export interface QuestionStatus {
   attempts: number;
@@ -12,10 +14,12 @@ export interface QuestionProps {
   hint?: string;
   answer: Answer;
   status: QuestionStatus;
+  geoLocation: GeoLocation;
+  type: GameType;
 }
 
 
-export class Question {
+export class Question implements IQuestion {
     
     private readonly id: string
     private readonly text: string
@@ -23,6 +27,8 @@ export class Question {
     private readonly hint: string | null = null
     private readonly answer: Answer
     private readonly status: QuestionStatus
+    private readonly geoLocation: GeoLocation
+    private readonly type: GameType
 
     constructor(
         questionProps : QuestionProps
@@ -31,6 +37,8 @@ export class Question {
         this.answer = questionProps.answer
         this.status = questionProps.status
         this.text = questionProps.text
+        this.geoLocation = questionProps.geoLocation
+        this.type = questionProps.type
     }
 
     getId() : string {
@@ -51,6 +59,14 @@ export class Question {
 
     getImage() : string | null {
         return this.image
+    }
+
+    getGeoLocation(): GeoLocation {
+        return this.geoLocation
+    }
+
+    getType(): GameType {
+        return this.type
     }
 
     isHit() : boolean {

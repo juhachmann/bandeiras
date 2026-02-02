@@ -4,7 +4,7 @@ import { GameAdapter } from "../GameAdapter";
 import { Question } from "../Question"
 import { EmptyGameAdapterMock } from "@/__dev__/EmptyGameAdapter";
 import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
-import { Game } from "../Game";
+import { GameGame } from "../GameGame";
 
 
 describe('Question', () => {
@@ -18,10 +18,10 @@ describe('Question', () => {
             difficulty: Difficulty.EASY
         }
     
-        let game: Game;
+        let game: GameGame;
     
         beforeEach(async () => {
-            game = await Game.createGame(gameConfig, gameAdapter);
+            game = await GameGame.createGame(gameConfig, gameAdapter);
         });
     
 
