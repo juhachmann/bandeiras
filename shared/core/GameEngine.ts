@@ -1,9 +1,10 @@
-import { GameSessionRepository, GeoItemRepository } from "@/types/repository";
-import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
+import { GameSessionRepository, GeoItemRepository } from "@/types/repositories";
+import { GameConfig } from "@/types/GameConfig";
 import { GameSession } from "@/types/gameSession";
 import { GameTimer } from "../types/GameTimer";
-import { FlagQuestionFactory, QuestionFactory } from "./QuestionFactory";
-import { Answer, Question } from "./Question";
+import { QuestionFactory } from "./QuestionFactory";
+import { Question } from "./Question";
+import { Answer } from "./Answer";
 
 export class GameEngine {
 
@@ -66,17 +67,6 @@ export class GameEngine {
     return null 
   }
   
-  submitAnswer(question: Question, answer: Answer): boolean {
-    if (!question.isHit()) {
-      question.attempt()
-    }
-    const answerIsCorrect : boolean = this.questionFactory.validateAnswer(question, answer)
-    if (answerIsCorrect) {
-      question.hit()
-    }
-    return answerIsCorrect
-  }
-  
   isGameOver(): boolean { 
     return false 
   }
@@ -93,9 +83,10 @@ export class GameEngine {
     return this.answers
   }
 
-  getAnswer(question: Question) : Answer {
-    return question.getAnswer()
-  }
+  // Sair daqui e ficar como método de Question
+  // getAnswer(question: Question) : Answer {
+  //   return question.getAnswer()
+  // }
 
 
 }

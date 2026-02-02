@@ -1,4 +1,4 @@
-import { GeoItem } from "@/types/geoItem"
+import { GeoItem } from "@/types/GeoItem"
 
 export const brazil : GeoItem[] = 
     [

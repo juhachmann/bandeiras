@@ -1,4 +1,4 @@
-import { GameSessionRepository, GeoItemRepository } from "@/types/repository";
+import { GameSessionRepository, GeoItemRepository } from "@/types/repositories";
 import { GameTimer } from "../types/GameTimer";
 
 export interface GameAdapter {

@@ -1,11 +1,14 @@
-import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/gameConfig";
+import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
 import { GameAdapter } from "@/core/GameAdapter";
 import { GameEngine } from "./GameEngine";
-import { Answer, Question } from "./Question";
-import { AnswerRO, QuestionRO } from "../types/questionRO";
+import { Question } from "./Question";
 import { GameError } from "./errors";
+import { Answer } from "./Answer";
 
 
+// TODO: expor Game (GameEngine) e GameSession => duas classes diferentes
+// GameSession = load, new, save, quit, isGameOver, getScore, getTime, getStats
+// Game = getQuestions, getAnswers, nextQuestion, currentQuestion
 export class Game {
 
     private readonly gameEngine : GameEngine
@@ -58,45 +61,46 @@ export class Game {
 
     }
 
-    validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): QuestionRO { 
-        const question : Question | undefined = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
-        if (!question) 
-            throw new GameError(`Question #${questionRO.id} NOT FOUND in this game session`)
+    // Fica em Question
+    // validateAnswer(questionRO: QuestionRO, answerRO: AnswerRO): QuestionRO { 
+    //     const question : Question | undefined = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
+    //     if (!question) 
+    //         throw new GameError(`Question #${questionRO.id} NOT FOUND in this game session`)
         
-        const answer : Answer | undefined = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
-        if (!answer) 
-            throw new GameError(`Answer #${answerRO.id} NOT found in this game session`)
+    //     const answer : Answer | undefined = this.gameEngine.getAnswers().find(a => a.getId() == answerRO.id)
+    //     if (!answer) 
+    //         throw new GameError(`Answer #${answerRO.id} NOT found in this game session`)
         
-        this.gameEngine.submitAnswer(question, answer)
-        return question.toJSON()
+    //     this.gameEngine.submitAnswer(question, answer)
+    //     return question.toJSON()
         
-    }
+    // }
     
     isGameOver(): boolean { 
         return this.gameEngine.isGameOver()
     }
 
-    getQuestions(): QuestionRO[] {       
-        return this.gameEngine.getSession().questions.map((q) => q.toJSON())
+    getQuestions(): Question[] {       
+        return this.gameEngine.getSession().questions
     }
 
-    nextQuestion() : QuestionRO | null {
-        const nextQuestion = this.gameEngine.nextQuestion()
-        return nextQuestion ? nextQuestion.toJSON() : null
+    nextQuestion() : Question | null {
+        return this.gameEngine.nextQuestion()
     }
 
-    getCurrentQuestion(): QuestionRO | null {
+    getCurrentQuestion(): Question | null {
         return null
     }
 
-    getAnswer(questionRO: QuestionRO) : AnswerRO | null {
-        const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
-        if (!question) return null
-        return this.gameEngine.getAnswer(question).toJSON()
-    }
+    // Vai ficar em Question
+    // getAnswer(questionRO: QuestionRO) : AnswerRO | null {
+    //     const question = this.gameEngine.getSession().questions.find(q => q.getId() == questionRO.id)
+    //     if (!question) return null
+    //     return this.gameEngine.getAnswer(question).toJSON()
+    // }
 
-    getAnswers() : AnswerRO[] {
-        return this.gameEngine.getAnswers().map(a => a.toJSON())
+    getAnswers() : Answer[] {
+        return this.gameEngine.getAnswers()
     }
  
 

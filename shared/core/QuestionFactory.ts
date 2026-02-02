@@ -1,12 +1,11 @@
-import { GameConfig, GameType } from "@/types/gameConfig";
-import { GeoItem } from "@/types/geoItem";
-import { Answer, Question, QuestionProps } from "./Question";
+import { GameConfig, GameType } from "@/types/GameConfig";
+import { GeoItem } from "@/types/GeoItem";
+import { Question, QuestionProps } from "./Question";
+import { Answer } from "./Answer";
 
 export abstract class QuestionFactory {
 
     abstract createQuestions(geoItems: GeoItem[]): Question[]
-
-    abstract validateAnswer(question: Question, answer: Answer): boolean
 
     static create(gameConfig: GameConfig): QuestionFactory {
         switch (gameConfig.gameType) {
@@ -51,22 +50,19 @@ export abstract class QuestionFactory {
 
 export class FlagQuestionFactory extends QuestionFactory {
     
-    validateAnswer(question: Question, answer: Answer): boolean {
-        const isCorrect : boolean = question.getGeoItemId() == answer.getGeoItemId()
-        return isCorrect
-    }
-
     createQuestions(geoItems: GeoItem[]): Question[] {
+        let idCounter = 0
         const questions: Question[] = geoItems.map(geoItem => {
             const questionProps: QuestionProps = {
-                geoItemId: String(geoItem.flag.country_id),
+                id: String(idCounter++),
                 text: geoItem.flag.description,
                 image: geoItem.flag.file,
                 hint: geoItem.flag.description,
                 answer: new Answer ({
-                    geoItemId: String(geoItem.flag.country_id),
+                    id: String(idCounter),
                     text: geoItem.country.name,
                     info: geoItem.flag.info,
+                    allMatched: false
                 }),
                 status: {
                     attempts: 0,
@@ -80,19 +76,12 @@ export class FlagQuestionFactory extends QuestionFactory {
 
     }
 
-
-
 }
 
 export class CountryQuestionFactory extends QuestionFactory {
-    validateAnswer(question: Question, answer: Answer): boolean {
-        throw new Error("Method not implemented.");
-    }
 
     createQuestions(geoItems: GeoItem[]): Question[] {
         throw new Error("Method not implemented.");
     }
-
-
 
 }

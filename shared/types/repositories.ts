@@ -1,6 +1,6 @@
-import { GameType, GeoLocation } from "@/types/gameConfig"
+import { GameType, GeoLocation } from "@/types/GameConfig"
 import { GameSession } from "@/types/gameSession"
-import { GeoItem } from "@/types/geoItem"
+import { GeoItem } from "@/types/GeoItem"
 
 export interface GeoItemRepository {
   getByGeoLocation(location: GeoLocation): Promise<GeoItem[]>

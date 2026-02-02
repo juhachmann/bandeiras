@@ -1,8 +1,8 @@
-import { GeoItemRepository } from "@/types/repository"
-import { GeoLocation } from "@/types/gameConfig"
-import { GeoItem } from "@/types/geoItem"
+import { GeoItemRepository } from "@/types/repositories"
+import { GeoLocation } from "@/types/GameConfig"
+import { GeoItem } from "@/types/GeoItem"
 
-// Esta classe wrapper vai servir para lógica de retry e cache
+// Esta classe wrapper vai servir apenas para lógica de retry e cache, mas não é pra estar aqui...
 export class GeoItemDataFetcher {
 
     private geoItemRepository : GeoItemRepository
