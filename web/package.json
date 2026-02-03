@@ -2,9 +2,8 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "TURBOPACK=0 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -13,7 +12,6 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@flags/game": "file:../shared",
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3"

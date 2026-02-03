@@ -1,8 +1,8 @@
-import { Flag } from "@/src/shared/types";
 import Image from 'next/image';
+import { Answer } from '../type/game';
 
 interface FlagCardsProps {
-    flag: Flag;
+    flag: Answer;
     hit: boolean;
     miss: boolean;
     disabled: boolean;
@@ -17,15 +17,15 @@ export default function FlagCards( { flag, hit, miss, disabled, checkAnswer, ind
             <div className="card h-100" onClick={() => checkAnswer(index)}>
                 <div className="position-relative" style={{height: '200px'}}>
                     <Image 
-                        src={flag.file} 
+                        src={flag.image} 
                         className="card-img-top" 
-                        alt={flag.description}
+                        alt={flag.text}
                         fill
                         style={{objectFit: 'cover'}}
                     />
                 </div>
                 <div className="card-body">
-                    <p className="card-text">{flag.description}</p>
+                    <p className="card-text">{flag.text}</p>
                 </div>
             </div>
         </div>
