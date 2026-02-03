@@ -1,14 +1,12 @@
-import { GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
-import { GameAdapter } from "./GameAdapter";
+import { GameConfig, GameType, GeoLocation, IGame, IGameAdapter, IGameSession } from "../types/types";
 import { Game } from "./Game";
-import { IGame, IGameSession } from "./IGame";
 
 export class GameSession implements IGameSession {
 
     private game : Game = new Game({gameType: GameType.COUNTRIES, location: GeoLocation.BRAZIL}, [])
 
     constructor(
-        private readonly gameAdapter : GameAdapter,
+        private readonly gameAdapter : IGameAdapter,
         private readonly gameConfig : GameConfig
     ) { }
 

@@ -1,5 +1,5 @@
 import { factorial } from "@/utils";
-import { IGame, IQuestion } from "../IGame";
+import { IGame, IQuestion } from "@/types/types";
 import { Question } from "../Question";
 import { Answer } from "../Answer";
 import { getEmptyFlagGame, getLatinAmericaFlagGame } from "@/__dev__/GameFactoryMock";
@@ -7,8 +7,7 @@ import { getEmptyFlagGame, getLatinAmericaFlagGame } from "@/__dev__/GameFactory
 describe('IGame', () => {
 
     let game : IGame
-
-    
+   
     beforeEach(async () => {
         game = await getLatinAmericaFlagGame()
     });

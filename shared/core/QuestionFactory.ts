@@ -1,11 +1,10 @@
-import { GameConfig, GameType } from "@/types/GameConfig";
-import { GeoItem } from "@/types/GeoItem";
+import { IQuestion, GeoItem, GameConfig, GameType } from "../types/types";
 import { Question, QuestionProps } from "./Question";
 import { Answer } from "./Answer";
 
 export abstract class QuestionFactory {
 
-    abstract createQuestions(geoItems: GeoItem[]): Question[]
+    abstract createQuestions(geoItems: GeoItem[]): IQuestion[]
 
     static create(gameConfig: GameConfig): QuestionFactory {
         switch (gameConfig.gameType) {
@@ -18,18 +17,6 @@ export abstract class QuestionFactory {
         }
     }
 
-    findNextQuestion(questions: Question[]): Question | null {
-        const candidates = this.filterHitQuestions(questions)
-        const length = candidates.length
-
-        if (length == 0) {
-            return null
-        }
-
-        const index = this.randomArrayIndex(length)
-        return candidates[index]
-    }
-
     protected shuffleList(array: any[]): any[] {
         return array
             .map(value => ({ value, sort: Math.random() }))
@@ -37,22 +24,14 @@ export abstract class QuestionFactory {
             .map(({ value }) => value)
     }
 
-    private randomArrayIndex(arrayLength: number) {
-        return Math.floor(Math.random() * arrayLength)
-    }
-
-    protected filterHitQuestions(questions: Question[]) : Question[] {
-        return questions.filter((question) => !question.isHit())
-    }
-
 }
 
 
 export class FlagQuestionFactory extends QuestionFactory {
     
-    createQuestions(geoItems: GeoItem[]): Question[] {
+    createQuestions(geoItems: GeoItem[]): IQuestion[] {
         let idCounter = 0
-        const questions: Question[] = geoItems.map(geoItem => {
+        const questions: IQuestion[] = geoItems.map(geoItem => {
             const questionProps: QuestionProps = {
                 id: String(idCounter++),
                 text: geoItem.flag.description,
@@ -82,7 +61,7 @@ export class FlagQuestionFactory extends QuestionFactory {
 
 export class CountryQuestionFactory extends QuestionFactory {
 
-    createQuestions(geoItems: GeoItem[]): Question[] {
+    createQuestions(geoItems: GeoItem[]): IQuestion[] {
         throw new Error("Method not implemented.");
     }
 

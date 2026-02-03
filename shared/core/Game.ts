@@ -1,15 +1,13 @@
-import { GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
+import { GeoItem, GameConfig, GameType, GeoLocation, IGame, IQuestion, IAnswer } from "../types/types";
 import { Question } from "./Question";
-import { GeoItem } from "@/types/GeoItem";
 import { QuestionFactory } from "./QuestionFactory";
 import { Answer } from "./Answer";
-import { IGame } from "./IGame";
 
 export class Game implements IGame {
     
     private questions : IQuestion[] = []
-    private answers: Answer[] = []
-    private currentQuestion : Question | null = null
+    private answers: IAnswer[] = []
+    private currentQuestion : IQuestion | null = null
 
     constructor(
         private readonly gameconfig : GameConfig,
@@ -28,7 +26,7 @@ export class Game implements IGame {
         return this.gameconfig.gameType
     }
 
-    nextQuestion() : Question | null {
+    nextQuestion() : IQuestion | null {
         if (this.questions.length == 0) {
             return null
         }
@@ -37,15 +35,15 @@ export class Game implements IGame {
         return nextQuestion
     }
 
-    getQuestions(): Question[] {
+    getQuestions(): IQuestion[] {
         return this.questions
     }
 
-    getAnswers() : Answer[] {
+    getAnswers() : IAnswer[] {
         return this.answers
     }
 
-    getCurrentQuestion(): Question | null {
+    getCurrentQuestion(): IQuestion | null {
         return this.currentQuestion
     }
 
@@ -67,7 +65,7 @@ export class Game implements IGame {
         this.nextQuestion()
     }
 
-    private getRandomValidQuestion() : Question | null {
+    private getRandomValidQuestion() : IQuestion | null {
         const candidates = this.questions.filter((question) => !question.isHit())
         const length = candidates.length
 

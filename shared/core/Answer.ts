@@ -1,4 +1,4 @@
-import { IAnswer } from "./IGame";
+import { IAnswer } from "../types/types";
 
 export interface AnswerProps {
   id: string;

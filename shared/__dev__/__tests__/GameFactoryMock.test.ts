@@ -1,6 +1,5 @@
-import { IGame } from "@/core/IGame";
 import { getEmptyFlagGame, getLatinAmericaFlagGame } from "../GameFactoryMock";
-import { GameType, GeoLocation } from "@/types/GameConfig";
+import { GameType, GeoLocation, IGame } from "@/types/types";
 
 describe('GameFactoryMock', () => {
 

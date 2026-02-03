@@ -1,23 +1,12 @@
-import { GameAdapter } from "@/core";
-import { GameTimer } from "@/types/GameTimer";
-import { GeoItemRepository, GameSessionRepository } from "@/types";
-import { GameTimerMock } from "@/__dev__/GameTimerMock";
 import { EmptyRepositoryMock } from "./EmptyRepositoryMock";
+import { IGameAdapter, IGeoItemRepository } from "../types/types";
 
-export class EmptyGameAdapterMock implements GameAdapter {
+export class EmptyGameAdapterMock implements IGameAdapter {
 
     private emptyRepoMock = new EmptyRepositoryMock()
 
-    private gameTimer: GameTimer = new GameTimerMock()
-
-    getGeoItemRepository(): GeoItemRepository {
+    getGeoItemRepository(): IGeoItemRepository {
         return this.emptyRepoMock
-    }
-    getSessionRepository(): GameSessionRepository {
-        return this.emptyRepoMock
-    }
-    getTimer(): GameTimer {
-        return this.gameTimer
     }
     
 }

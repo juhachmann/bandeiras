@@ -1,8 +1,8 @@
-import { Answer } from "@/core/Answer";
-import { Question } from "@/core/Question";
-import { GeoLocation } from "@/types/GameConfig";
+import { Answer } from "../core/Answer"
+import { Question } from "../core/Question"
+import { GameType, GeoLocation, IQuestion } from "../types/types"
 
-const questions : Question[] = [
+const questions : IQuestion[] = [
     new Question({
         id: "A",
         text: "Question A",
@@ -15,7 +15,8 @@ const questions : Question[] = [
             attempts: 0,
             hit: false
         },
-        geoLocation: GeoLocation.BRAZIL
+        geoLocation: GeoLocation.BRAZIL,
+        type: GameType.FLAGS
     }),
     new Question({
         id: "B",
@@ -29,7 +30,8 @@ const questions : Question[] = [
             attempts: 0,
             hit: false
         },
-        geoLocation: GeoLocation.BRAZIL
+        geoLocation: GeoLocation.BRAZIL,
+        type: GameType.FLAGS
 
     }),
     new Question({
@@ -44,15 +46,16 @@ const questions : Question[] = [
             attempts: 0,
             hit: false
         },
-    geoLocation: GeoLocation.BRAZIL
+        geoLocation: GeoLocation.BRAZIL,
+        type: GameType.FLAGS
     }),
 
 ]
 
-export const getOneQuestion = () : Question => {
+export const getOneQuestion = () : IQuestion => {
     return questions[0]
 }
 
-export const getQuestionList = () : Question[] => {
+export const getQuestionList = () : IQuestion[] => {
     return questions
 }

@@ -1,4 +1,4 @@
-import { IAnswer, IQuestion } from "../IGame";
+import { IAnswer, IQuestion } from "@/types/types";
 import { getLatinAmericaFlagGame } from "@/__dev__/GameFactoryMock";
 
 

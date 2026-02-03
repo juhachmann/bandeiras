@@ -1,14 +1,14 @@
-import { GameAdapter } from "../GameAdapter";
+import { IGameSession, IGame, IGameAdapter } from "@/types/types";
 import { GameAdapterMock } from "@/__dev__/GameAdapterMock";
 import { Game } from "../Game";
 import { getOneQuestion } from "@/__dev__/QuestionsMock";
 import { gameConfigMock } from "@/__dev__/GameConfigMock";
-import { GameSessionLoader, IGame, IGameSession } from "../IGame";
+import { GameSessionLoader } from "../../GameSessionLoader";
 
 describe('IGameSession', () => {
 
     const gameConfig = gameConfigMock        
-    const gameAdapter : GameAdapter = new GameAdapterMock()
+    const gameAdapter : IGameAdapter = new GameAdapterMock()
     let gameSession : IGameSession
 
     beforeEach(async () => {

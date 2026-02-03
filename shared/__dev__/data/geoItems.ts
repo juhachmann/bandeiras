@@ -1,5 +1,5 @@
-import { GeoLocation } from "@/types/GameConfig"
-import { GeoItem } from "@/types/GeoItem"
+import { GeoLocation } from "@/types/types"
+import { GeoItem } from "@/types/types"
 
 export const brazil : GeoItem[] = 
     [

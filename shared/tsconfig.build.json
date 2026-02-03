@@ -6,7 +6,8 @@
     "declarationMap": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "composite": true
+    "composite": true,
+    "paths": {}
   },
   "exclude": [
     "node_modules",

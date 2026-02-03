@@ -1,10 +1,8 @@
-import { brazil, latinAmerica } from "@/__dev__/data/geoItems"
-import { GeoItemRepository } from "@/types/repositories"
-import { GeoItem } from "@/types/GeoItem"
-import { GeoLocation } from "@/types/GameConfig"
+import { GeoItem, GeoLocation, IGeoItemRepository } from "../types/types"
+import { brazil, latinAmerica } from "./data/geoItems"
 
 
-export class geoItemRepositoryMock implements GeoItemRepository {
+export class GeoItemRepositoryMock implements IGeoItemRepository {
     
     async getByGeoLocation(geoLocation: GeoLocation): Promise<GeoItem[]> {
         
