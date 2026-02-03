@@ -1,41 +1,31 @@
-import { GameAdapterMock } from "@/__dev__/GameAdapterMock";
-import { Answer } from "../Answer"
-import { GameAdapter } from "../GameAdapter";
-import { Question } from "../Question"
-import { EmptyGameAdapterMock } from "@/__dev__/EmptyGameAdapter";
-import { Difficulty, GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
-import { GameGame } from "../GameGame";
+import { IAnswer, IQuestion } from "../IGame";
+import { getLatinAmericaFlagGame } from "@/__dev__/GameFactoryMock";
 
 
-describe('Question', () => {
-
-        const gameAdapter: GameAdapter = new GameAdapterMock();
-        const emptyGameAdapter = new EmptyGameAdapterMock();
-    
-        const gameConfig : GameConfig = {
-            gameType: GameType.FLAGS,
-            location: GeoLocation.LATIN_AMERICA,
-            difficulty: Difficulty.EASY
-        }
-    
-        let game: GameGame;
-    
-        beforeEach(async () => {
-            game = await GameGame.createGame(gameConfig, gameAdapter);
-        });
-    
-
-    describe('Attempt', () => {
-
-        let question : Question
-        let correctAnswer : Answer
-        let incorrectAnswer : Answer
-
-        beforeEach(() => {
-            question = game.getQuestions()[0]
+describe('IQuestion', () => {
+  
+    let question : IQuestion
+    let correctAnswer : IAnswer
+    let incorrectAnswer : IAnswer
+  
+    beforeEach(async () => {
+        const game = await getLatinAmericaFlagGame()
+        const questions = game.getQuestions()
+        if (questions.length >= 2) {
+            question = questions[0]
             correctAnswer = question.getAnswer()
-            incorrectAnswer = game.getQuestions()[1].getAnswer()            
-        });
+            incorrectAnswer = questions[1].getAnswer()
+        } else {
+            throw new Error("Jogo precisa ter ao menos duas questões para teste");            
+        }
+
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks()
+    })   
+
+    describe('attempt', () => {
 
         it('should set question property hit to true if answer is correct', () => {
             question.attempt(correctAnswer)

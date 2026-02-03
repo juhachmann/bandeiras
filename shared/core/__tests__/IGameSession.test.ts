@@ -1,33 +1,27 @@
-import { GameTimerMock } from "@/__dev__/GameTimerMock";
-import { GameConfig, GameType, GeoLocation } from "@/types/GameConfig";
 import { GameAdapter } from "../GameAdapter";
 import { GameAdapterMock } from "@/__dev__/GameAdapterMock";
-import { GameSession } from "../GameSession";
 import { Game } from "../Game";
-import { Question, QuestionProps } from "../Question";
 import { getOneQuestion } from "@/__dev__/QuestionsMock";
+import { gameConfigMock } from "@/__dev__/GameConfigMock";
+import { GameSessionLoader, IGame, IGameSession } from "../IGame";
 
-describe('GameSession', () => {
+describe('IGameSession', () => {
 
-    const gameConfig : GameConfig = {
-        gameType: GameType.FLAGS,
-        location: GeoLocation.BRAZIL
-    }
-    
+    const gameConfig = gameConfigMock        
     const gameAdapter : GameAdapter = new GameAdapterMock()
+    let gameSession : IGameSession
 
-    describe('create', () => {
+    beforeEach(async () => {
+        gameSession = await GameSessionLoader.createNew(gameAdapter, gameConfig)
+    });
 
-        it('should create a new GameSession, given a GameConfig and a GameAdapter', () => {
-            expect(GameSession.create(gameAdapter, gameConfig)).toBeInstanceOf(GameSession)
-        });
-
+    afterEach(() => {
+        jest.restoreAllMocks()
     })
 
     describe('getGame', () => {
 
-        const gameSession : GameSession = GameSession.create(gameAdapter, gameConfig)
-        let game : Game
+        let game : IGame
 
         beforeEach(() => {
             game = gameSession.getGame()
@@ -50,8 +44,7 @@ describe('GameSession', () => {
 
     describe('isGameOver', () => {
 
-        const gameSession : GameSession = GameSession.create(gameAdapter, gameConfig)
-        let game : Game
+        let game : IGame
 
         beforeEach(() => {
             game = gameSession.getGame()
@@ -59,12 +52,12 @@ describe('GameSession', () => {
 
         it('should return false if game has next question', () => {
             const question = getOneQuestion()
-            jest.spyOn(game, 'getNextQuestion').mockReturnValue(question)  
+            jest.spyOn(game, 'nextQuestion').mockReturnValue(question)  
             expect(gameSession.isGameOver()).toBeFalsy()
         });
 
-        it('should return true if game has no current question', () => {
-            jest.spyOn(game, 'getNextQuestion').mockReturnValue(null)  
+        it('should return true if game has no next question', () => {
+            jest.spyOn(game, 'nextQuestion').mockReturnValue(null)  
             expect(gameSession.isGameOver()).toBeTruthy()
         });
 

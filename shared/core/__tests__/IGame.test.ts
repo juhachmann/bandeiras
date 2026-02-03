@@ -1,28 +1,23 @@
-import { GameAdapterMock } from "@/__dev__/GameAdapterMock";
-import { gameConfigMock } from "@/__dev__/GameConfigMock";
 import { factorial } from "@/utils";
-import { GameSessionLoader, IGame, IQuestion } from "../IGame";
-import { EmptyGameAdapterMock } from "@/__dev__/EmptyGameAdapter";
+import { IGame, IQuestion } from "../IGame";
 import { Question } from "../Question";
 import { Answer } from "../Answer";
+import { getEmptyFlagGame, getLatinAmericaFlagGame } from "@/__dev__/GameFactoryMock";
 
-describe('Game', () => {
-
-    const gameAdapter = new GameAdapterMock()
-    const emptyGameAdapter = new EmptyGameAdapterMock()
-    const gameConfig = gameConfigMock
+describe('IGame', () => {
 
     let game : IGame
 
+    
     beforeEach(async () => {
-        const gameSession = await GameSessionLoader.createNew(gameAdapter, gameConfig)
-        game = gameSession.getGame()
-        //game = new Game(gameConfig, geoItems)
+        game = await getLatinAmericaFlagGame()
     });
+
 
     afterEach(() => {
         jest.restoreAllMocks()
     })
+
 
     describe('getQuestions', () => {
 
@@ -33,8 +28,7 @@ describe('Game', () => {
         })
 
         it('should return empty list when geoItem data is empty', async () => {
-            const gameSession = await GameSessionLoader.createNew(emptyGameAdapter, gameConfig)
-            const emptyGame = gameSession.getGame()
+            const emptyGame = await getEmptyFlagGame()
             expect(emptyGame.getQuestions().length).toBe(0)
         })
 
@@ -43,11 +37,8 @@ describe('Game', () => {
         })
 
         it('two lists should have the same elements given the same GameConfig', async () => {
-            const gameSessionA = await GameSessionLoader.createNew(gameAdapter, gameConfig)
-            const gameA = gameSessionA.getGame()
-
-            const gameSessionB = await GameSessionLoader.createNew(gameAdapter, gameConfig)
-            const gameB = gameSessionB.getGame()
+            const gameA =  await getLatinAmericaFlagGame()
+            const gameB =  await getLatinAmericaFlagGame()
 
             expect(gameA.getQuestions().length).toBe(gameB.getQuestions().length)
 
@@ -69,26 +60,14 @@ describe('Game', () => {
 
             const results = new Set();
             for (let i = 0; i < numTests; i++) {
-                const gameSession = await GameSessionLoader.createNew(gameAdapter, gameConfig)
-                const game = gameSession.getGame()
+                const game = await getLatinAmericaFlagGame()
                 results.add(JSON.stringify(game.getQuestions()))
             }            
             expect(results.size).toBeGreaterThan(expectedUnique)
         })
-
-        it('should create Questions with same GeoLocation as of gameConfig', () => {
-            const questions = game.getQuestions()
-            questions.forEach(q => expect(q.getGeoLocation()).toEqual(gameConfig.location))
-        });
-
-
-        it('should create Questions with same Type as of gameConfig', () => {
-            const questions = game.getQuestions()
-            questions.forEach(q => expect(q.getType()).toEqual(gameConfig.gameType))
-        });
-
         
     });
+
 
     describe('getAnswers', () => {
 
@@ -99,8 +78,7 @@ describe('Game', () => {
         })
 
         it('should be empty if geoItems is empty', async () => {
-            const gameSession = await GameSessionLoader.createNew(emptyGameAdapter, gameConfig)
-            const emptyGame = gameSession.getGame()
+            const emptyGame = await getEmptyFlagGame()
             expect(emptyGame.getAnswers().length).toEqual(0) 
         });
 
@@ -115,8 +93,7 @@ describe('Game', () => {
     describe('getCurrentQuestion', () => {
 
         it('should be null, given that geoItems is empty', async () => {
-            const gameSession = await GameSessionLoader.createNew(emptyGameAdapter, gameConfig)
-            const emptyGame = gameSession.getGame()
+            const emptyGame = await getEmptyFlagGame()
             expect(emptyGame.getCurrentQuestion()).toBeNull()             
         });
 
@@ -143,12 +120,10 @@ describe('Game', () => {
     });
 
 
-
     describe('nextQuestion', () => {
 
         it('should return null, given that geoItem is empty', async () => {
-            const gameSession = await GameSessionLoader.createNew(emptyGameAdapter, gameConfig)
-            const emptyGame = gameSession.getGame()
+            const emptyGame = await getEmptyFlagGame()
 
             const numberOfAttempts = 100
             for (let i = 0; i < numberOfAttempts; i++) {

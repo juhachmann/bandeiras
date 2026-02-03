@@ -3,10 +3,11 @@ import { Question } from "./Question";
 import { GeoItem } from "@/types/GeoItem";
 import { QuestionFactory } from "./QuestionFactory";
 import { Answer } from "./Answer";
+import { IGame } from "./IGame";
 
-export class Game {
+export class Game implements IGame {
     
-    private questions : Question[] = []
+    private questions : IQuestion[] = []
     private answers: Answer[] = []
     private currentQuestion : Question | null = null
 
