@@ -61,9 +61,16 @@ export const GameManager = () => {
         const newGameSession : IGameSession = await GameSessionLoader.createNew(gameAdapter, gameConfig)
         setGameSession(newGameSession)
 
-        if(! setNextQuestion() ) {
+        const newCurrentQuestion = newGameSession.getGame().getCurrentQuestion()
+        
+        if (!newCurrentQuestion) {
+            setGame(false)
             return 
         }
+
+        setCurrentQuestion(newCurrentQuestion)
+        setCurrentCountry(mapToQuestion(newCurrentQuestion))
+        setGame(true)
 
         const newAnswers = newGameSession.getGame().getAnswers()   
         setAnswers(newAnswers)
@@ -76,16 +83,20 @@ export const GameManager = () => {
 
     const setNextQuestion = () : boolean => {
 
+        if (!gameSession) {
+            return false
+        }
+
         const newCurrentQuestion = gameSession.getGame().nextQuestion()
 
         setCurrentQuestion(newCurrentQuestion)
-        setCurrentCountry(mapToQuestion(newCurrentQuestion));
         
         if (newCurrentQuestion == null) {
             setGame(false)
             return false
         }
 
+        setCurrentCountry(mapToQuestion(newCurrentQuestion))
         return true
         
     }
@@ -107,6 +118,10 @@ export const GameManager = () => {
 
     
     const checkAnswer = (index: number) => {
+        if (!flags || !answers || !currentQuestion) {
+            return
+        }
+
         const selectedAnswer = flags[index]
 
         const selectedGameAnswer = answers.find(a => a.getId() == selectedAnswer.id)

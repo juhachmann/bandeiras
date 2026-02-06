@@ -22,6 +22,20 @@ export enum GeoLocation {
   LATIN_AMERICA = 'latin_america',
 }
 
+// Que gambiarra
+export namespace GeoLocation {
+  export function get(geolocation: string): GeoLocation | null {
+    switch (geolocation) {
+      case 'brasil':
+        return GeoLocation.BRAZIL
+      case 'latin_america':
+        return GeoLocation.LATIN_AMERICA
+      default:
+        return null
+    }
+  }
+}
+
 export interface IGeoItemRepository {
   getByGeoLocation(location: GeoLocation): Promise<GeoItem[]>
 }
