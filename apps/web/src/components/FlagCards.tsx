@@ -19,7 +19,7 @@ export default function FlagCards( { flag, hit, miss, disabled, checkAnswer, ind
                     <Image 
                         src={flag.getImage()} 
                         className="card-img-top" 
-                        alt={flag.getText()}
+                        alt={flag.getImage()}
                         fill
                         style={{objectFit: 'cover'}}
                     />

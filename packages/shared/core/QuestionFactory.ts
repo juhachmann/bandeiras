@@ -33,13 +33,13 @@ export class FlagQuestionFactory extends QuestionFactory {
         let idCounter = 0
         const questions: IQuestion[] = geoItems.map(geoItem => {
             const questionProps: QuestionProps = {
-                id: String(idCounter++),
-                text: geoItem.flag.description,
-                image: geoItem.flag.file,
-                hint: geoItem.flag.description,
+                id: String(geoItem.country.id),
+                text: geoItem.country.name,
+                image: undefined,
+                hint: undefined,
                 answer: new Answer ({
-                    id: String(idCounter),
-                    text: geoItem.country.name,
+                    id: String(geoItem.flag.country_id),
+                    text: geoItem.flag.description,
                     info: geoItem.flag.info,
                     allMatched: false,
                     image: geoItem.flag.file
