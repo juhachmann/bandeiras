@@ -1,12 +1,12 @@
 'use client'
 
-import { GameManager } from "@/src/hooks/useGameManager";
+import { useGameManager } from "@/src/hooks/useGameManager";
 import GameLayout from '@/src/components/GameLayout';
 import FlagCards from "@/src/components/FlagCards";
 
 export default function Home() {  
 
-    const { answers, game, checkAnswer, currentQuestion, resetGame, score } = GameManager();
+    const { answers, game, checkAnswer, currentQuestion, resetGame, score } = useGameManager();
 
     return (  
         <GameLayout 

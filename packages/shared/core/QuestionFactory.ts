@@ -41,7 +41,8 @@ export class FlagQuestionFactory extends QuestionFactory {
                     id: String(idCounter),
                     text: geoItem.country.name,
                     info: geoItem.flag.info,
-                    allMatched: false
+                    allMatched: false,
+                    image: geoItem.flag.file
                 }),
                 status: {
                     attempts: 0,

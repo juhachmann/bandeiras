@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { GeoLocation, GameConfig, GameSessionLoader, GameType, IAnswer, IGameAdapter, IGameSession, IGeoItemRepository, IQuestion } from "@flags/game";
+import { GeoLocation, GameConfig, GameSessionLoader, GameType, IGameAdapter, IGameSession, IGeoItemRepository } from "@flags/game";
 import { GeoItemLocalService } from "../services/GeoItemLocalService";
-import { Answer, Question } from "../type/game";
+import { Answer, Question } from "../types/game";
 
 
-export const GameManager = () => {
+export const useGameManager = () => {
   
     const gameConfig : GameConfig = {
         gameType: GameType.FLAGS,
@@ -27,34 +27,15 @@ export const GameManager = () => {
 
 
     // const [questions, setQuestions] = useState<Array<IQuestion>>()
-    const [answers, setAnswers] = useState<Array<IAnswer>>()
-    const [currentQuestion, setCurrentQuestion] = useState<IQuestion>()
+    const [answers, setAnswers] = useState<Array<Answer>>()
+    // const [selectedAnswer, setSelectedAnswer] = useState<IAnswer>()
+    const [currentQuestion, setCurrentQuestion] = useState<Question>()
 
     // const [countries, setCountries] = useState<Array<IQuestion>>()
-    const [flags, setFlags] = useState<Array<Answer>>()
-    const [currentCountry, setCurrentCountry] = useState<Question>()
+    // const [flags, setFlags] = useState<Array<Answer>>()
+    // const [currentCountry, setCurrentCountry] = useState<IQuestion>()
 
     const [gameSession, setGameSession] = useState<IGameSession>()
-
-    const mapToQuestion = (question: IQuestion) : Question => {
-        return {
-            id: question.getId(),
-            answer: undefined,
-            text: question.getText(),
-            geolocation: question.getGeoLocation(),
-            type: question.getType(),
-            isHit: question.isHit(),
-            attempts: question.getAttempts()
-        }
-    }
-
-    const mapToAnswer = (answer : IAnswer) : Answer => {
-        return {
-            id: answer.getId(),
-            text: answer.getText(),
-            allMatched: answer.getAllMatched()
-        }
-    }
 
     const initializeGame = async () => {
        
@@ -69,14 +50,16 @@ export const GameManager = () => {
         }
 
         setCurrentQuestion(newCurrentQuestion)
-        setCurrentCountry(mapToQuestion(newCurrentQuestion))
+        // setCurrentCountry(mapToQuestion(newCurrentQuestion))
         setGame(true)
 
-        const newAnswers = newGameSession.getGame().getAnswers()   
+        const newAnswers = newGameSession.getGame().getAnswers() 
+                  
         setAnswers(newAnswers)
 
-        const newFlags = newAnswers.map(a => mapToAnswer(a))
-        setFlags(newFlags)
+        // const newFlags = newAnswers.map(a => mapToAnswer(a))
+                
+        // setFlags(newFlags)
 
     }
 
@@ -96,7 +79,7 @@ export const GameManager = () => {
             return false
         }
 
-        setCurrentCountry(mapToQuestion(newCurrentQuestion))
+        // setCurrentCountry(mapToQuestion(newCurrentQuestion))
         return true
         
     }
@@ -113,29 +96,32 @@ export const GameManager = () => {
         const initialize = async () => {
             await resetGame() 
         }
-        initialize()
+        initialize()        
     }, []);
 
     
-    const checkAnswer = (index: number) => {
-        if (!flags || !answers || !currentQuestion) {
+    const checkAnswer = (answer: Answer) => {
+
+        console.log("Selected Answer: ");
+        console.log(answer);       
+
+        if (
+            // !flags || 
+            !answers || !currentQuestion) {
             return
         }
 
-        const selectedAnswer = flags[index]
-
-        const selectedGameAnswer = answers.find(a => a.getId() == selectedAnswer.id)
-
-        if (!selectedGameAnswer) {
-            throw new Error("Invalid Answer Id")
-        }
-
-        const isCorrect = currentQuestion.attempt(selectedGameAnswer)
+        const isCorrect = currentQuestion.attempt(answer)
 
         if (isCorrect) {
-            const updatedAnswers = [...flags]
-            updatedAnswers.splice(index, 1)
-            setFlags(updatedAnswers)
+            // TODO: usar a propriedade allMatched de Answer
+            // const previousAnswers = [...flags]
+            const previousAnswers = [...answers]
+
+            const updatedAnswers = previousAnswers.filter(a => a != answer)
+            
+            // setFlags(updatedAnswers)
+            setAnswers(updatedAnswers)
 
             const updatedScore = score + 1
             setScore(updatedScore)
@@ -145,6 +131,11 @@ export const GameManager = () => {
 
     }
 
-    return { score, retry, currentQuestion: currentCountry, answers: flags, game, checkAnswer, resetGame };
+    return { score, retry, 
+        // currentQuestion: currentCountry, 
+        currentQuestion,
+        // answers: flags, 
+        answers, 
+        game, checkAnswer, resetGame };
 
 }

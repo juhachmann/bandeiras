@@ -26,11 +26,11 @@ const mapToGeoItem = (data: any[]) : GeoItem[] => {
             },
             flag: {
                 country_id: d.flag.country_id,
-                file: d.flag.file,
+                file: 'image/' +  d.flag.file,
                 description: d.flag.description,
                 info: d.flag.info
             },
-            geoLocation: GeoLocation.get(d.geoLocation)!
+            geoLocation: GeoLocation.get(d.geoLocation)
         }
         return a
     })
