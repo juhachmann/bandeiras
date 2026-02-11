@@ -32,6 +32,8 @@ export class FlagQuestionFactory extends QuestionFactory {
     createQuestions(geoItems: GeoItem[]): IQuestion[] {
         let idCounter = 0
         const questions: IQuestion[] = geoItems.map(geoItem => {
+            console.log("GEOITEM");
+            console.log(geoItem);
             const questionProps: QuestionProps = {
                 id: String(geoItem.country.id),
                 text: geoItem.country.name,
@@ -43,7 +45,7 @@ export class FlagQuestionFactory extends QuestionFactory {
                     info: geoItem.flag.info,
                     allMatched: false,
                     image: geoItem.flag.file,
-                    iso3661: geoItem.country.iso3661
+                    iso31661: geoItem.country.iso31661
                 }),
                 status: {
                     attempts: 0,
