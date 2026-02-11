@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'export',
-  basePath: '/bandeiras',
+  basePath: process.env.NODE_ENV === 'production' ? '/bandeiras' : '',
   typescript: {
     ignoreBuildErrors: true,
   },
