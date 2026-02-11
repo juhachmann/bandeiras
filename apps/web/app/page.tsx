@@ -14,13 +14,13 @@ export default function Home() {
             score={score} 
             onReset={resetGame} 
             game={game}
-            question={`País: ${currentQuestion?.text}`}
+            question={`País: ${currentQuestion?.getText()}`}
         > 
             { answers?.map((answer, index) => (
                 <FlagCards
-                    key={answer.id}
+                    key={answer.getId()}
                     flag={answer}
-                    index={Number(answer.id)}
+                    index={Number(answer.getId())}
                     disabled={false}
                     hit={false}
                     miss={false}
