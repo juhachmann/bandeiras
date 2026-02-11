@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Answer } from '../types/game';
 
 interface FlagCardsProps {
@@ -14,15 +13,10 @@ export default function FlagCards( { flag, hit, miss, disabled, checkAnswer, ind
 
     return (
         <div className="col-md-6 col-lg-3">
+
             <div className="card h-100" onClick={() => checkAnswer(flag)}>
                 <div className="position-relative" style={{height: '200px'}}>
-                    <Image 
-                        src={flag.getImage()} 
-                        className="card-img-top" 
-                        alt={flag.getImage()}
-                        fill
-                        style={{objectFit: 'cover'}}
-                    />
+                    <span className={`fi fi-${flag.getIso31661().toLowerCase()}`} style={{fontSize: 'clamp(5rem, 15vw, 10rem)', textAlign: 'center'}}></span>
                 </div>
                 <div className="card-body">
                     <p className="card-text">{flag.getText()}</p>

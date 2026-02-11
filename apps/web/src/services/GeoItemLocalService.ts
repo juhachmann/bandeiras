@@ -22,7 +22,8 @@ const mapToGeoItem = (data: any[]) : GeoItem[] => {
         const a : GeoItem = {
             country: {
                 id: d.country.id,
-                name: d.country.name
+                name: d.country.name,
+                iso31661: d.country.iso31661
             },
             flag: {
                 country_id: d.flag.country_id,
