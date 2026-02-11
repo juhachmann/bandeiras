@@ -5,7 +5,8 @@ export interface AnswerProps {
   text: string;
   image?: string;
   info?: string;
-  allMatched: boolean
+  allMatched: boolean;
+  iso3661?: string;
 }
 
 export class Answer implements IAnswer {
@@ -15,6 +16,7 @@ export class Answer implements IAnswer {
     private readonly image: string | null
     private readonly info: string | null
     private allMatched : boolean
+    private readonly iso3661: string | null
 
     constructor (answerProps : AnswerProps) {
         this.id = answerProps.id
@@ -22,6 +24,7 @@ export class Answer implements IAnswer {
         this.image = answerProps.image ?? null
         this.info = answerProps.info ?? null
         this.allMatched = answerProps.allMatched
+        this.iso3661 = answerProps.iso3661 ?? null
     }
 
     getId() : string {
@@ -42,6 +45,10 @@ export class Answer implements IAnswer {
 
     getAllMatched() : boolean {
         return this.allMatched
+    }
+
+    getIso3661(): string | null {
+        return this.iso3661
     }
 
 }

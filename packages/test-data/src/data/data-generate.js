@@ -1,46 +1,56 @@
 import fs from 'node:fs';
 
+import {iso31661} from 'iso-3166'
+
 const data = [
     'Mexico',
     'Guatemala',
     'Honduras',
     'Belize',
     'Costa Rica',
-    'San Salvador',
-    'Nicarágua',
+    'EL Salvador',
+    'Nicaragua',
     'Panama',
     'Jamaica',
     'Cuba',
     'Haiti',
-    'República Dominicana',
-    'Colômbia',
+    'Dominican Republic',
+    'Colombia',
     'Venezuela',
     'Suriname',
-    'Guiana',
-    'Equador',
+    'French Guiana',
+    'Ecuador',
     'Peru',
-    'Bolívia',
+    'Bolivia',
     'Chile',
-    'Paraguai',
-    'Uruguai',
-    'Brasil',
+    'Paraguay',
+    'Uruguay',
+    'Brazil',
     'Argentina'
 ]
 
-const resultList = []
+const resultListWithIso = []
+const resultListWithoutIso = []
 
 const generate = (nome, counter) => {
     const nomeTratado = tirarEspacos(nome).toLowerCase()
     const nomeFinalizado = tirarAcentos(nomeTratado)
+    const iso = toIso31661(nome)
     return { 
-        country: {id: counter, name: nome}, 
+        country: {id: counter, name: nome, iso31661: iso}, 
         flag: {country_id: counter, file: nomeFinalizado + ".svg", description: "", info: ""},
         geoLocation: 'latin_america'
     }
 }
 
+
 const tirarEspacos = (nome) => {
     return nome.replace(/\s/g, '_')
+}
+
+const toIso31661 = (pais) => {
+    console.log("Procurando iso de: " + pais);    
+    return iso31661.find(iso => iso.name.toLowerCase() == pais.toLowerCase())?.alpha2
 }
 
 const tirarAcentos = (texto) => {
@@ -57,16 +67,28 @@ data.forEach(d => {
     counter++
     const result = generate(d, counter)
     console.log(result);
-    resultList.push(result) 
+    if (result.country.iso31661)
+        resultListWithIso.push(result) 
+    else 
+        resultListWithoutIso.push(result) 
+
 })
 
-console.log(resultList);
 
-const resultJson = JSON.stringify(resultList)
 
-console.log(resultJson);
+console.log(resultListWithIso);
+console.log(resultListWithoutIso);
+
+
+const resultJsonWithIso = JSON.stringify(resultListWithIso)
+const resultJsonWithoutIso = JSON.stringify(resultListWithoutIso)
 
 
 writeToFile('const data = ', 'data.ts')
 
-writeToFile(resultJson, 'data.ts')
+writeToFile(resultJsonWithIso, 'data.ts')
+
+writeToFile('\n const dataWithoutISO = ', 'data.ts')
+
+writeToFile(resultJsonWithoutIso, 'data.ts')
+

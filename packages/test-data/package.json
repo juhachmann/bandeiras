@@ -11,5 +11,8 @@
   "scripts": {
     "dev": "echo 'No build needed for test-data'",
     "build": "echo 'No build needed for test-data'"
+  },
+  "dependencies": {
+    "iso-3166": "^4.4.0"
   }
 }

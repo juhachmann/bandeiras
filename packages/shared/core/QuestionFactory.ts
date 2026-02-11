@@ -42,7 +42,8 @@ export class FlagQuestionFactory extends QuestionFactory {
                     text: geoItem.flag.description,
                     info: geoItem.flag.info,
                     allMatched: false,
-                    image: geoItem.flag.file
+                    image: geoItem.flag.file,
+                    iso3661: geoItem.country.iso3661
                 }),
                 status: {
                     attempts: 0,

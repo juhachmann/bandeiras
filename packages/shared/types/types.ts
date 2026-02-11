@@ -8,6 +8,7 @@ export interface GeoItem {
 export interface Country {
   id: number;
   name: string;
+  iso3661?: string;
 }
 
 export interface Flag {
@@ -94,5 +95,6 @@ export interface IAnswer {
     getText() : string
     getImage() : string | null 
     getInfo() : string | null 
-    getAllMatched() : boolean 
+    getAllMatched() : boolean
+    getIso3661(): string | null 
 }
