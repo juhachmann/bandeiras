@@ -3,10 +3,11 @@
 import { useGameManager } from "@/src/hooks/useGameManager";
 import GameLayout from '@/src/components/GameLayout';
 import FlagCards from "@/src/components/FlagCards";
+import { useEffect, useState } from "react";
 
 export default function Home() {  
 
-    const { answers, game, checkAnswer, currentQuestion, resetGame, score } = useGameManager();
+    const { questions, game, checkAnswer, currentQuestion, resetGame, score, attempts } = useGameManager();
 
     return (  
         <GameLayout 
@@ -16,14 +17,13 @@ export default function Home() {
             game={game}
             question={`País: ${currentQuestion?.getText()}`}
         > 
-            { answers?.map((answer, index) => (
+            { questions?.map((question, index) => (
                 <FlagCards
-                    key={answer.getId()}
-                    flag={answer}
-                    index={Number(answer.getId())}
-                    disabled={false}
-                    hit={false}
-                    miss={false}
+                    key={question.getAnswer().getId()}
+                    flag={question.getAnswer()}
+                    index={Number(question.getAnswer().getId())}
+                    isHit={question.isHit()}
+                    attempts={question.getAttempts()}
                     checkAnswer={checkAnswer}
                 />
             ) ) }

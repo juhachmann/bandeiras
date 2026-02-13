@@ -24,10 +24,11 @@ export const useGameManager = () => {
     const [score, setScore] = useState<number>(0)
     const [retry, setRetry] = useState<number>(0)
     const [game, setGame] = useState<boolean>(false)
+    const [attempts, setAttempts] = useState<number>(0)
 
 
-    // const [questions, setQuestions] = useState<Array<IQuestion>>()
-    const [answers, setAnswers] = useState<Array<Answer>>()
+    const [questions, setQuestions] = useState<Array<Question>>()
+    // const [answers, setAnswers] = useState<Array<Answer>>()
     // const [selectedAnswer, setSelectedAnswer] = useState<IAnswer>()
     const [currentQuestion, setCurrentQuestion] = useState<Question>()
 
@@ -48,14 +49,17 @@ export const useGameManager = () => {
             setGame(false)
             return 
         }
-
         setCurrentQuestion(newCurrentQuestion)
         // setCurrentCountry(mapToQuestion(newCurrentQuestion))
         setGame(true)
 
-        const newAnswers = newGameSession.getGame().getAnswers() 
-                  
-        setAnswers(newAnswers)
+        const newQuestions = newGameSession.getGame().getQuestions()
+        setQuestions(newQuestions)
+
+        setAttempts(newCurrentQuestion.getAttempts())
+
+        // const newAnswers = newGameSession.getGame().getAnswers() 
+        // setAnswers(newAnswers)
 
         // const newFlags = newAnswers.map(a => mapToAnswer(a))
                 
@@ -64,24 +68,23 @@ export const useGameManager = () => {
     }
 
 
-    const setNextQuestion = () : boolean => {
+    const setNextQuestion = () => {
 
         if (!gameSession) {
             return false
         }
 
         const newCurrentQuestion = gameSession.getGame().nextQuestion()
-
-        setCurrentQuestion(newCurrentQuestion)
         
         if (newCurrentQuestion == null) {
             setGame(false)
-            return false
+            return
         }
 
-        // setCurrentCountry(mapToQuestion(newCurrentQuestion))
-        return true
-        
+        setCurrentQuestion(newCurrentQuestion)
+        setAttempts(newCurrentQuestion.getAttempts())
+
+        // setCurrentCountry(mapToQuestion(newCurrentQuestion))        
     }
 
     const resetGame = async () => {
@@ -100,28 +103,38 @@ export const useGameManager = () => {
     }, []);
 
     
-    const checkAnswer = (answer: Answer) => {
+    const checkAnswer = (answer: Answer) : boolean => {
 
         console.log("Selected Answer: ");
         console.log(answer);       
 
         if (
             // !flags || 
-            !answers || !currentQuestion) {
+            !questions || !currentQuestion) {
             return
         }
 
         const isCorrect = currentQuestion.attempt(answer)
+        setAttempts(currentQuestion.getAttempts())
+        
 
         if (isCorrect) {
             // TODO: usar a propriedade allMatched de Answer
             // const previousAnswers = [...flags]
-            const previousAnswers = [...answers]
+            // const previousAnswers = [...answers]
 
-            const updatedAnswers = previousAnswers.filter(a => a != answer)
+            // const updatedAnswers = previousAnswers.filter(a => a != answer)
             
-            // setFlags(updatedAnswers)
-            setAnswers(updatedAnswers)
+            // // setFlags(updatedAnswers)
+            // setAnswers(updatedAnswers)
+
+
+            // const previousQuestions = [...questions]
+
+            // const updatedQuestions = previousQuestions.filter(q => q != currentQuestion)
+            
+            // // setFlags(updatedAnswers)
+            // setQuestions(updatedQuestions)
 
             const updatedScore = score + 1
             setScore(updatedScore)
@@ -129,13 +142,16 @@ export const useGameManager = () => {
             setNextQuestion()
         }
 
+        return isCorrect
+
     }
 
     return { score, retry, 
         // currentQuestion: currentCountry, 
         currentQuestion,
+        attempts,
         // answers: flags, 
-        answers, 
+        questions, 
         game, checkAnswer, resetGame };
 
 }
