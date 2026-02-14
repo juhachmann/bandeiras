@@ -52,13 +52,23 @@ export namespace GeoLocation {
   }
 }
 
+// Ideal que não viesse aqui
 export interface IGeoItemRepository {
   getByGeoLocation(location: GeoLocation): Promise<GeoItem[]>
 }
 
+export interface QuerySpec {
+  field: string
+  operator: 'eq' | 'in' | 'contains'
+  value: unknown
+}
+
+export interface IFlagItemRepository {
+  findBySpec (spec: QuerySpec[]) : Promise<FlagItem[]>
+}
+
 export enum GameType {
-  FLAGS = 'flags',
-  COUNTRIES = 'countries'
+  FLAGS = 'flags'
 }
 
 export interface GameConfig {
@@ -77,7 +87,7 @@ export interface IGameAdapter {
 }
 
 export interface IGameSession {
-    getGame(): IGame
+    getGame(): IGame | undefined
     isGameOver(): boolean
 }
 
