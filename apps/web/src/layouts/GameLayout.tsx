@@ -1,7 +1,7 @@
 'use client'
 
 import { useGameManager } from "../hooks/useGameManager";
-import FlagCards from "./FlagCards";
+import FlagCards from "../components/FlagCards";
 
 
 export default function GameLayout() {

@@ -10,7 +10,6 @@ interface FlagCardsProps {
     readonly index: number;
 }
 
-
 const borderColors = {
     great: 'success',
     good: 'warning',
@@ -18,7 +17,7 @@ const borderColors = {
     neutral: 'light-subtle'
 }
 
-
+// Seria legal tirar comportamento daqui do componente e deixar em um hook ou classe separado
 // TODO: 
 // Comportamentos: 
 // A) Ficar piscar em vermelho se é a resposta certa e já teve 3 tentativas..
@@ -26,11 +25,9 @@ const borderColors = {
 
 export default function FlagCards( { flag, attempts, isHit, checkAnswer, index } : FlagCardsProps) {
 
-
     const [isWrong, setIsWrong] = useState<boolean>(false)
     const [borderColor, setBorderColor] = useState<string>(borderColors.neutral)
-    const [mustBlink, setMustBlink] = useState<boolean>(false)
-    
+    const [mustBlink, setMustBlink] = useState<boolean>(false)    
 
     const resolveAttempt = (answer : Answer) => {
         const isCorrect = checkAnswer(answer)

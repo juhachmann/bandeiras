@@ -1,6 +1,6 @@
 'use client'
 
-import GameLayout from '@/src/components/GameLayout';
+import GameLayout from '@/src/layouts/GameLayout';
 
 export default function Home() {  
 
