@@ -1,7 +1,5 @@
 import { GeoItem, GameConfig, GameType, GeoLocation, IGame, IQuestion, IAnswer } from "../types/types";
-import { Question } from "./Question";
 import { QuestionFactory } from "./QuestionFactory";
-import { Answer } from "./Answer";
 
 export class Game implements IGame {
     
@@ -73,15 +71,10 @@ export class Game implements IGame {
             return null
         }
 
-        const index = this.randomArrayIndex(length)
+        const index = Math.floor(Math.random() * length)
         return candidates[index]
 
     }
-
-    private randomArrayIndex(arrayLength: number) {
-        return Math.floor(Math.random() * arrayLength)
-    }
-
    
 
 }

@@ -1,21 +1,21 @@
-import { GameConfig, GameType, GeoLocation, IGame, IGameAdapter, IGameSession } from "../types/types";
+import { GameConfig, IGame, IGameAdapter, IGameSession } from "../types/types";
 import { Game } from "./Game";
 
 export class GameSession implements IGameSession {
 
-    private game : Game = new Game({gameType: GameType.COUNTRIES, location: GeoLocation.BRAZIL}, [])
+    private game? : IGame
 
     constructor(
         private readonly gameAdapter : IGameAdapter,
         private readonly gameConfig : GameConfig
     ) { }
 
-    getGame() : IGame {
+    getGame() : IGame | undefined {
         return this.game;
     }
 
     isGameOver(): boolean {
-        return this.game.nextQuestion() == null;
+        return this.game?.nextQuestion() == null;
     }
 
     async initialize() : Promise<void> {
