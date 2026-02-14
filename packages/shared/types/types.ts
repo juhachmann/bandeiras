@@ -16,6 +16,21 @@ export interface Flag {
   file: string;
   description: string;
   info: string;
+  subject_id: string;
+}
+
+export interface FlagItem {
+  subject: Subject;
+  flag: Flag;
+  metadata: {};
+}
+
+export interface Subject {
+  id: string;
+  code: string;
+  codeType: string;
+  name: string;
+  type: string;
 }
 
 export enum GeoLocation {

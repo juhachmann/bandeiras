@@ -12,6 +12,7 @@ package-lock.json
 .npm
 .yarn-integrity
 dist/
+.turbo/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
