@@ -19,16 +19,11 @@ describe('GameSessionLoader', () => {
         it('should create a new GameSession, given a GameConfig and a GameAdapter', async () => {
             expect(gameSession).toBeInstanceOf(GameSession)
         });
-
-        it('should create game Questions with same GeoLocation as of gameConfig', () => {
-            const game = gameSession.getGame()
-            const questions = game.getQuestions()
-            questions.forEach(q => expect(q.getGeoLocation()).toEqual(gameConfig.location))
-        });
+        
 
         it('should create Questions with same Type as of gameConfig', () => {
             const game = gameSession.getGame()
-            const questions = game.getQuestions()
+            const questions = game!.getQuestions()
             questions.forEach(q => expect(q.getType()).toEqual(gameConfig.gameType))
         });
 

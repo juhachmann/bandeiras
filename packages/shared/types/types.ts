@@ -12,11 +12,10 @@ export interface Country {
 }
 
 export interface Flag {
-  country_id: number;
+  subjectId: string;
   file: string;
   description: string;
   info: string;
-  subject_id: string;
 }
 
 export interface FlagItem {
@@ -73,12 +72,12 @@ export enum GameType {
 
 export interface GameConfig {
   gameType: GameType;
-  location: GeoLocation;
+  filter: QuerySpec[]
 }
 
 export interface IGameAdapter {
 
-  getGeoItemRepository(): IGeoItemRepository;
+  getFlagItemRepository(): IFlagItemRepository;
 //   getSessionRepository(): GameSessionRepository;
 //   getTimer(): GameTimer;
 //  getCacheService(): CacheService;
@@ -92,7 +91,6 @@ export interface IGameSession {
 }
 
 export interface IGame {
-    getGeoLocation(): GeoLocation 
     getGameType(): GameType 
     nextQuestion() : IQuestion | null 
     getQuestions(): IQuestion[] 
@@ -107,7 +105,7 @@ export interface IQuestion {
     getText() : string 
     getHint() : string | null 
     getImage() : string | null 
-    getGeoLocation(): GeoLocation 
+    getMetadata(): {} 
     getType(): GameType 
     isHit() : boolean 
     getAttempts() : number 
@@ -121,5 +119,6 @@ export interface IAnswer {
     getImage() : string | null 
     getInfo() : string | null 
     getAllMatched() : boolean
-    getIso31661(): string | null 
+    getCode(): string | null 
+    getCodeType() : string | null
 }

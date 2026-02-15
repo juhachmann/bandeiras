@@ -18,5 +18,7 @@ export const getEmptyFlagGame = async () : Promise<IGame> => {
 
 const createGame = async (gameConfig : GameConfig, gameAdapter : IGameAdapter) : Promise<IGame> => {
     const gameSession = await GameSessionLoader.createNew(gameAdapter, gameConfig)
-    return gameSession.getGame()
+    // TODO: Tratar esse erro aqui
+    return gameSession.getGame()!
+
 }

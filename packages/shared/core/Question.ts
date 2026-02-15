@@ -13,8 +13,8 @@ export interface QuestionProps {
   hint?: string;
   answer: IAnswer;
   status: QuestionStatus;
-  geoLocation: GeoLocation;
   type: GameType;
+  metadata: {};
 }
 
 
@@ -26,7 +26,7 @@ export class Question implements IQuestion {
     private readonly hint: string | null = null
     private readonly answer: IAnswer
     private readonly status: QuestionStatus
-    private readonly geoLocation: GeoLocation
+    private readonly metadata: {}
     private readonly type: GameType
 
     constructor(
@@ -36,7 +36,7 @@ export class Question implements IQuestion {
         this.answer = questionProps.answer
         this.status = questionProps.status
         this.text = questionProps.text
-        this.geoLocation = questionProps.geoLocation
+        this.metadata = questionProps.metadata
         this.type = questionProps.type
     }
 
@@ -60,8 +60,8 @@ export class Question implements IQuestion {
         return this.image
     }
 
-    getGeoLocation(): GeoLocation {
-        return this.geoLocation
+    getMetadata(): {} {
+        return this.metadata
     }
 
     getType(): GameType {

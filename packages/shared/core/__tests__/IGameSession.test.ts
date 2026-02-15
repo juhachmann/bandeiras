@@ -32,7 +32,7 @@ describe('IGameSession', () => {
         });
 
         it('should return a Game object with same GeoLocation defined in GameConfig', () => {
-            expect(game.getGeoLocation()).toBe(gameConfig.location)
+            expect(game.getMetadata()).toBe(gameConfig.location)
         });
 
         it('should return a Game object with same GameType defined in GameConfig', () => {

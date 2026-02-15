@@ -1,41 +1,32 @@
-import { GeoItem, GeoLocation, IGeoItemRepository } from "@/types/types"
-import { brazil, latinAmerica } from "@flags/test-data"
+import { FlagItem, GeoItem, GeoLocation, IFlagItemRepository, IGeoItemRepository, QuerySpec } from "@/types/types"
+import { brazil, latin_america_flag, latinAmerica } from "@flags/test-data"
 
-
-export class GeoItemRepositoryMock implements IGeoItemRepository {
+export class FlagItemRepositoryMock implements IFlagItemRepository {
     
-    async getByGeoLocation(geoLocation: GeoLocation): Promise<GeoItem[]> {
-        
-        if (geoLocation === GeoLocation.BRAZIL) {
-            return mapToGeoItem(brazil)
-        }
-        if (geoLocation === GeoLocation.LATIN_AMERICA) {
-            return mapToGeoItem(latinAmerica)
-        }
-        
-        return []
-
+    async findBySpec(spec: QuerySpec[]): Promise<FlagItem[]> {
+        return mapToFlagItem(latin_america_flag )
     }
 
 }
 
-
-const mapToGeoItem = (data: any[]) : GeoItem[] => {
-    return data.map(d => {
-        const a : GeoItem = {
-            country: {
-                id: d.country.id,
-                name: d.country.name
+const mapToFlagItem = (data: any[]) : FlagItem[] => {
+    return data.map(record => {
+        return {
+            subject : {
+                id: record.id,
+                code: record.code ?? "",
+                codeType: record.codeType ?? "",
+                name: record.name,
+                type: record.type ?? ""
             },
             flag: {
-                country_id: d.flag.country_id,
-                file: d.flag.file,
-                description: d.flag.description,
-                info: d.flag.info
+                subjectId: record.subjectId,
+                file: record.flag.file,
+                description: record.flag.description,
+                info: record.flag.info,
             },
-            geoLocation: GeoLocation.get(d.geoLocation)!
+            metadata: record.metadata
         }
-        return a
     })
 }
 

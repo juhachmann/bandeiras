@@ -43,6 +43,16 @@ const generate = (nome, counter) => {
     }
 }
 
+const generateFlagItem = (nome, id) => {
+    const nomeTratado = tirarEspacos(nome).toLowerCase()
+    const nomeFinalizado = tirarAcentos(nomeTratado)
+    const iso = toIso31661(nome)
+    return { 
+        subject: {id: id, name: nome, code: iso, codeType: 'iso31661'}, 
+        flag: {subjectId: id, file: nomeFinalizado + ".svg", description: "", info: ""},
+        metadata: {type: 'country', period: 'modern', region: 'latin_america'}
+    }
+}
 
 const tirarEspacos = (nome) => {
     return nome.replace(/\s/g, '_')
@@ -65,15 +75,16 @@ let counter = 0
 
 data.forEach(d => {
     counter++
-    const result = generate(d, counter)
+    // const result = generate(d, counter)
+    const result = generateFlagItem(d, counter)
     console.log(result);
-    if (result.country.iso31661)
+    // if (result.country.iso31661)
+    if (result.subject.code)
         resultListWithIso.push(result) 
     else 
         resultListWithoutIso.push(result) 
 
 })
-
 
 
 console.log(resultListWithIso);

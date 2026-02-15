@@ -19,8 +19,8 @@ export class GameSession implements IGameSession {
     }
 
     async initialize() : Promise<void> {
-        const repository = this.gameAdapter.getGeoItemRepository()
-        const geoItems = await repository.getByGeoLocation(this.gameConfig.location)
+        const repository = this.gameAdapter.getFlagItemRepository()
+        const geoItems = await repository.findBySpec(this.gameConfig.filter)
         this.game = new Game(this.gameConfig, geoItems)
     }
 

@@ -1,17 +1,15 @@
-import { IQuestion, GeoItem, GameConfig, GameType } from "../types/types";
+import { IQuestion, GeoItem, GameConfig, GameType, FlagItem } from "../types/types";
 import { Question, QuestionProps } from "./Question";
 import { Answer } from "./Answer";
 
 export abstract class QuestionFactory {
 
-    abstract createQuestions(geoItems: GeoItem[]): IQuestion[]
+    abstract createQuestions(flagItems: FlagItem[]): IQuestion[]
 
     static create(gameConfig: GameConfig): QuestionFactory {
         switch (gameConfig.gameType) {
             case GameType.FLAGS:
                 return new FlagQuestionFactory();
-            case GameType.COUNTRIES:
-                return new CountryQuestionFactory();
             default: // TODO: pode ter um FactoryPadrão ou Factory Nulo...
                 return new FlagQuestionFactory();
         }
@@ -29,29 +27,27 @@ export abstract class QuestionFactory {
 
 export class FlagQuestionFactory extends QuestionFactory {
     
-    createQuestions(geoItems: GeoItem[]): IQuestion[] {
-        let idCounter = 0
-        const questions: IQuestion[] = geoItems.map(geoItem => {
-            console.log("GEOITEM");
-            console.log(geoItem);
+    createQuestions(flagItems: FlagItem[]): IQuestion[] {
+        const questions: IQuestion[] = flagItems.map(flagItem => {
             const questionProps: QuestionProps = {
-                id: String(geoItem.country.id),
-                text: geoItem.country.name,
+                id: String(flagItem.subject.id),
+                text: flagItem.subject.name,
                 image: undefined,
                 hint: undefined,
                 answer: new Answer ({
-                    id: String(geoItem.flag.country_id),
-                    text: geoItem.flag.description,
-                    info: geoItem.flag.info,
+                    id: String(flagItem.flag.subjectId),
+                    text: flagItem.flag.description,
+                    info: flagItem.flag.info,
                     allMatched: false,
-                    image: geoItem.flag.file,
-                    iso31661: geoItem.country.iso31661
+                    image: flagItem.flag.file,
+                    code: flagItem.subject.code,
+                    codeType: flagItem.subject.codeType
                 }),
                 status: {
                     attempts: 0,
                     hit: false
                 },
-                geoLocation: geoItem.geoLocation,
+                metadata: flagItem.metadata,
                 type: GameType.FLAGS
             }
             return new Question(questionProps)
@@ -59,14 +55,6 @@ export class FlagQuestionFactory extends QuestionFactory {
         const shuffledQuestions = this.shuffleList(questions)
         return shuffledQuestions
 
-    }
-
-}
-
-export class CountryQuestionFactory extends QuestionFactory {
-
-    createQuestions(geoItems: GeoItem[]): IQuestion[] {
-        throw new Error("Method not implemented.");
     }
 
 }
