@@ -12,7 +12,7 @@ describe('GameFactoryMock', () => {
         });
         
         it('should return a game whose geolocation is Latin America', () => {
-            expect(game.getGeoLocation()).toBe(GeoLocation.LATIN_AMERICA)           
+            expect(game.getMetadata()).toBe(GeoLocation.LATIN_AMERICA)           
         });
 
         it('should return a game whose type is Flag', () => {
@@ -32,7 +32,7 @@ describe('GameFactoryMock', () => {
         });
 
         it('should return a game whose geolocation is Latin America', () => {
-            expect(game.getGeoLocation()).toBe(GeoLocation.LATIN_AMERICA)           
+            expect(game.getMetadata()).toBe(GeoLocation.LATIN_AMERICA)           
         });
 
         it('should return a game whose type is Flag', () => {

@@ -1,13 +1,14 @@
-import { IGameAdapter, IGeoItemRepository } from "@/types/types";
-import { GeoItemRepositoryMock } from "./GeoItemRepositoryMock";
+import { IFlagItemRepository, IGameAdapter } from "@/types/types";
+import { FlagItemRepositoryMock } from "./GeoItemRepositoryMock";
 
 
 export class GameAdapterMock implements IGameAdapter {
 
-    private geoItemRepository: IGeoItemRepository = new GeoItemRepositoryMock()
+    private flagItemRepository: IFlagItemRepository = new FlagItemRepositoryMock()
    
-    getGeoItemRepository(): IGeoItemRepository {
-        return this.geoItemRepository
+ 
+    getFlagItemRepository(): IFlagItemRepository {
+        return this.flagItemRepository
     }
    
     

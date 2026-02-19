@@ -1,7 +1,5 @@
-import { GeoItem, GameConfig, GameType, GeoLocation, IGame, IQuestion, IAnswer } from "../types/types";
-import { Question } from "./Question";
+import { GeoItem, GameConfig, GameType, GeoLocation, IGame, IQuestion, IAnswer, FlagItem } from "../types/types";
 import { QuestionFactory } from "./QuestionFactory";
-import { Answer } from "./Answer";
 
 export class Game implements IGame {
     
@@ -11,15 +9,11 @@ export class Game implements IGame {
 
     constructor(
         private readonly gameconfig : GameConfig,
-        private readonly geoItems: GeoItem[]
+        private readonly flagItems: FlagItem[]
     ) {
         this.setQuestions()
         this.setAnswers()
         this.setInitialQuestion()
-    }
-
-    getGeoLocation(): GeoLocation {
-        return this.gameconfig.location
     }
 
     getGameType(): GameType {
@@ -49,9 +43,9 @@ export class Game implements IGame {
 
 
     private setQuestions() : void {
-        if (this.geoItems.length > 0) {
+        if (this.flagItems.length > 0) {
             const questionFactory = QuestionFactory.create(this.gameconfig)
-            this.questions = questionFactory.createQuestions(this.geoItems)
+            this.questions = questionFactory.createQuestions(this.flagItems)
         }
     }
 
@@ -73,15 +67,10 @@ export class Game implements IGame {
             return null
         }
 
-        const index = this.randomArrayIndex(length)
+        const index = Math.floor(Math.random() * length)
         return candidates[index]
 
     }
-
-    private randomArrayIndex(arrayLength: number) {
-        return Math.floor(Math.random() * arrayLength)
-    }
-
    
 
 }

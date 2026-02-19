@@ -24,15 +24,11 @@ describe('IGameSession', () => {
         let game : IGame
 
         beforeEach(() => {
-            game = gameSession.getGame()
+            game = gameSession.getGame()!
         });
 
         it('should return a Game object', () => {
             expect(game).toBeInstanceOf(Game)
-        });
-
-        it('should return a Game object with same GeoLocation defined in GameConfig', () => {
-            expect(game.getGeoLocation()).toBe(gameConfig.location)
         });
 
         it('should return a Game object with same GameType defined in GameConfig', () => {
@@ -47,7 +43,7 @@ describe('IGameSession', () => {
         let game : IGame
 
         beforeEach(() => {
-            game = gameSession.getGame()
+            game = gameSession.getGame()!
         });
 
         it('should return false if game has next question', () => {

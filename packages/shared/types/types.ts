@@ -12,10 +12,24 @@ export interface Country {
 }
 
 export interface Flag {
-  country_id: number;
+  subjectId: string;
   file: string;
   description: string;
   info: string;
+}
+
+export interface FlagItem {
+  subject: Subject;
+  flag: Flag;
+  metadata: {};
+}
+
+export interface Subject {
+  id: string;
+  code: string;
+  codeType: string;
+  name: string;
+  type: string;
 }
 
 export enum GeoLocation {
@@ -37,23 +51,33 @@ export namespace GeoLocation {
   }
 }
 
+// Ideal que não viesse aqui
 export interface IGeoItemRepository {
   getByGeoLocation(location: GeoLocation): Promise<GeoItem[]>
 }
 
+export interface QuerySpec {
+  field: string
+  operator: 'eq' | 'in' | 'contains'
+  value: unknown
+}
+
+export interface IFlagItemRepository {
+  findBySpec (spec: QuerySpec[]) : Promise<FlagItem[]>
+}
+
 export enum GameType {
-  FLAGS = 'flags',
-  COUNTRIES = 'countries'
+  FLAGS = 'flags'
 }
 
 export interface GameConfig {
   gameType: GameType;
-  location: GeoLocation;
+  filter: QuerySpec[]
 }
 
 export interface IGameAdapter {
 
-  getGeoItemRepository(): IGeoItemRepository;
+  getFlagItemRepository(): IFlagItemRepository;
 //   getSessionRepository(): GameSessionRepository;
 //   getTimer(): GameTimer;
 //  getCacheService(): CacheService;
@@ -62,12 +86,11 @@ export interface IGameAdapter {
 }
 
 export interface IGameSession {
-    getGame(): IGame
+    getGame(): IGame | undefined
     isGameOver(): boolean
 }
 
 export interface IGame {
-    getGeoLocation(): GeoLocation 
     getGameType(): GameType 
     nextQuestion() : IQuestion | null 
     getQuestions(): IQuestion[] 
@@ -82,7 +105,7 @@ export interface IQuestion {
     getText() : string 
     getHint() : string | null 
     getImage() : string | null 
-    getGeoLocation(): GeoLocation 
+    getMetadata(): {} 
     getType(): GameType 
     isHit() : boolean 
     getAttempts() : number 
@@ -96,5 +119,6 @@ export interface IAnswer {
     getImage() : string | null 
     getInfo() : string | null 
     getAllMatched() : boolean
-    getIso31661(): string | null 
+    getCode(): string | null 
+    getCodeType() : string | null
 }
