@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { GeoLocation, GameConfig, GameSessionLoader, GameType, IGameAdapter, IGameSession, IGeoItemRepository } from "@flags/game";
-import { GeoItemLocalService } from "../services/GeoItemLocalService";
+import { GameConfig, GameSessionLoader, GameType, IFlagItemRepository, IGameAdapter, IGameSession } from "@flags/game";
+import { FlagItemLocalService } from "../services/FlagItemLocalService";
 import { Answer, Question } from "../types/game";
 
 
@@ -10,14 +10,14 @@ export const useGameManager = () => {
   
     const gameConfig : GameConfig = {
         gameType: GameType.FLAGS,
-        location: GeoLocation.LATIN_AMERICA
+        filter: []
     }
 
-    const geoItemService : IGeoItemRepository = new GeoItemLocalService()
+    const flagItemService : IFlagItemRepository = new FlagItemLocalService()
 
     const gameAdapter : IGameAdapter = {
-        getGeoItemRepository: function (): IGeoItemRepository {
-            return geoItemService
+        getFlagItemRepository: function (): IFlagItemRepository {
+            return flagItemService
         }
     }
 
