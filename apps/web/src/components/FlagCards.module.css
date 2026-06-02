@@ -1,0 +1,10 @@
+
+@keyframes blink-red {
+    0%, 100% { border-color: var(--bs-warning); }
+    50% { border-color: transparent; }
+}
+
+.blinkAnimation {
+    animation: blink-red 1s infinite;
+    border-width: 3px !important;
+}

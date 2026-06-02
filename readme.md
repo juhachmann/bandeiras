@@ -18,3 +18,37 @@ Dado o nome do país, selecionar a bandeira correta entre as que estão no displ
 - Desenvolver ideias iniciais em Java OK
 - Fazer o MVP em React
 - Migrar para ReactNative
+
+## Como rodar
+
+Pré-requisitos: Node.js >= 18 e npm >= 10
+
+### Instalar dependências
+
+```bash
+npm install
+```
+
+### Rodar em modo desenvolvimento
+
+```bash
+# Todos os apps/packages
+npm run dev
+
+# Apenas o app web
+npm run dev:web
+```
+
+O app web (Next.js) vai subir em http://localhost:3000
+
+### Build de produção
+
+```bash
+npm run build
+```
+
+### Testes
+
+```bash
+npm run test
+```

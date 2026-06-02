@@ -1,15 +1,16 @@
 'use client'
 
-interface GameLayoutProps {
-  title: string;
-  score: number;
-  onReset: () => void;
-  question: string;
-  game: boolean;
-  children: React.ReactNode;
-}
+import { useGameManager } from "../hooks/useGameManager";
+import FlagCards from "../components/FlagCards";
 
-export default function GameLayout({ title, score, onReset, question, game, children }: GameLayoutProps) {
+
+export default function GameLayout() {
+  
+  const { questions, game, checkAnswer, currentQuestion, resetGame, score, attempts } = useGameManager();
+  
+  const title = "Trivia"
+  const onReset = () => resetGame()
+
   return (
     <div className="container-fluid py-4">
       {/* Título da página */}
@@ -36,13 +37,23 @@ export default function GameLayout({ title, score, onReset, question, game, chil
             {/* Pergunta */}
             <div className="row mb-4">
               <div className="col-12 text-center">
-                <h4 className="text-dark bg-light p-3 rounded">{question}</h4>
+                <h4 className="text-dark bg-light p-3 rounded">{currentQuestion?.getText()}</h4>
               </div>
             </div>
 
             {/* Cards para imagens */}
             <div className="row g-3 justify-content-center">
-              {children}
+
+              { questions?.map((question, index) => (
+                  <FlagCards
+                      key={question.getAnswer().getId()}
+                      flag={question.getAnswer()}
+                      index={Number(question.getAnswer().getId())}
+                      isHit={question.isHit()}
+                      attempts={question.getAttempts()}
+                      checkAnswer={checkAnswer}
+                  />
+              ) ) }
             </div>
           </div>
         </div> 
