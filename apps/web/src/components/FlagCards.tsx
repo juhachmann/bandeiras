@@ -86,7 +86,7 @@ export default function FlagCards( { flag, attempts, isHit, checkAnswer, index }
             <div>Must blink? {mustBlink ? "true" : "false"}</div>
             <div className={`card h-100 border border-${borderColor} ${mustBlink ? styles.blinkAnimation : ''} ${isHit ? 'opacity-20 pe-none' : ''}`} onClick={() => resolveAttempt(flag)} >
                 <div className="position-relative" style={{height: '200px'}}>
-                    <span className={`fi fi-${flag.getIso31661().toLowerCase()}`} style={{fontSize: 'clamp(5rem, 15vw, 10rem)', textAlign: 'center'}}></span>
+                    <span className={`fi fi-${flag.getCode().toLowerCase()}`} style={{fontSize: 'clamp(5rem, 15vw, 10rem)', textAlign: 'center'}}></span>
                 </div>
                 <div className="card-body">
                     <p className="card-text">{flag.getText()}</p>
